@@ -1,5 +1,17 @@
-// User and Authentication Types
-export interface User {
+// Import Supabase types
+import type { User as SupabaseUser, Invoice, Receipt, Feedback, CreditScore } from './database'
+
+// User and Authentication Types (extending Supabase User)
+export interface User extends SupabaseUser {
+  name?: string;
+  avatar?: string;
+  role?: UserRole;
+  isVerified?: boolean;
+  preferences?: UserPreferences;
+}
+
+// Keep existing User interface for backwards compatibility
+export interface AppUser {
   id: string;
   email: string;
   name: string;
