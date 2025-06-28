@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Credibee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'credibee-blue': {
+                '50': '#eff8ff',
+                '100': '#dff0ff',
+                '200': '#bce5ff',
+                '300': '#89d7ff',
+                '400': '#52c1ff',
+                '500': '#29a9ff',
+                '600': '#0f8eff',
+                '700': '#0077ff',
+                '800': '#085fcd',
+                '900': '#0d51a2',
+                '950': '#0d3263',
+              },
+              'credibee-green': {
+                  '500': '#10b981'
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #invoice-content, #invoice-content * {
+          visibility: visible;
+        }
+        #invoice-content {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+        .no-print {
+          display: none;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.6.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.7.0",
+    "recharts": "https://esm.sh/recharts@^3.0.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-50 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
