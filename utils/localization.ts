@@ -1,4 +1,3 @@
-
 import { useCredibee } from '../hooks/useCredibee';
 
 const translations = {
@@ -57,6 +56,9 @@ const translations = {
         markAsPaid: 'Mark as Paid',
         invoiceSent: 'Invoice marked as Sent!',
         invoicePaid: 'Invoice marked as Paid!',
+        payNow: 'Pay Now',
+        scanToPay: 'Scan QR Code to Pay',
+        orPayWithLink: 'Or pay with this link:',
     },
     tl: {
         dashboard: 'Dashboard',
@@ -113,6 +115,9 @@ const translations = {
         markAsPaid: 'Markahan bilang Bayad',
         invoiceSent: 'Minarkahan ang invoice bilang Ipinadala!',
         invoicePaid: 'Minarkahan ang invoice bilang Bayad!',
+        payNow: 'Magbayad Ngayon',
+        scanToPay: 'I-scan ang QR Code para Magbayad',
+        orPayWithLink: 'O magbayad gamit ang link na ito:',
     }
 };
 

@@ -57,6 +57,9 @@ const InvoiceView: React.FC = () => {
     const subtotal = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
     const taxAmount = subtotal * (invoice.taxRate / 100);
     const total = subtotal + taxAmount;
+    
+    const paymentUrl = `https://pay.credibee.ph/dummy-payment?invoiceId=${invoice.invoiceNumber}&amount=${total}`;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(paymentUrl)}&qzone=1`;
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -144,6 +147,27 @@ const InvoiceView: React.FC = () => {
                             </div>
                         </div>
                     </section>
+
+                    {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue) && (
+                        <section className="my-12 p-6 bg-credibee-blue-50 rounded-lg border border-credibee-blue-200">
+                            <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('payNow')}</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                                <div className="text-center">
+                                    <img src={qrCodeUrl} alt="Payment QR Code" className="w-40 h-40 mx-auto border-4 border-white rounded-lg shadow-md" />
+                                    <p className="text-sm text-slate-600 mt-2 font-medium">{t('scanToPay')}</p>
+                                </div>
+                                <div className="space-y-4 text-center md:text-left">
+                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-block w-full md:w-auto bg-credibee-blue-700 text-white px-8 py-3 rounded-lg text-base font-bold hover:bg-credibee-blue-800 transition-transform hover:scale-105">
+                                        {t('payNow')} ₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                                    </a>
+                                    <p className="text-xs text-slate-500 mt-4">{t('orPayWithLink')}</p>
+                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-credibee-blue-600 hover:underline break-all">
+                                        {paymentUrl}
+                                    </a>
+                                </div>
+                            </div>
+                        </section>
+                    )}
 
                     {invoice.notes && (
                          <section className="mb-8">
