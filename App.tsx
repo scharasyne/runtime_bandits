@@ -10,6 +10,8 @@ import Profile from './components/pages/Profile';
 import PublicProfile from './components/pages/PublicProfile';
 import InvoiceView from './components/pages/InvoiceView';
 import InvoiceForm from './components/pages/InvoiceForm';
+import ReceiptView from './components/pages/ReceiptView';
+import ReceiptForm from './components/pages/ReceiptForm';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +24,9 @@ const App: React.FC = () => {
           <Route path="invoices/edit/:id" element={<InvoiceForm />} />
           <Route path="invoices/:id" element={<InvoiceView />} />
           <Route path="receipts" element={<Receipts />} />
+          <Route path="receipts/new" element={<ReceiptForm />} />
+          <Route path="receipts/edit/:id" element={<ReceiptForm />} />
+          <Route path="receipts/:id" element={<ReceiptView />} />
           <Route path="feedback" element={<Feedback />} />
           <Route path="profile" element={<Profile />} />
         </Route>

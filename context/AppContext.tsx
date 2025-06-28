@@ -21,7 +21,9 @@ const initialInvoices: Invoice[] = [
 
 const initialReceipts: Receipt[] = [
     { id: 'rec-001', receiptNumber: 'R-001', from: 'Startup Inc.', date: '2024-07-28', amount: 16800, category: ReceiptCategory.ServiceFee, paymentMethod: PaymentMethod.BankTransfer },
-    { id: 'rec-002', receiptNumber: 'R-002', from: 'Office Supplies Co.', date: '2024-07-10', amount: -2500, category: ReceiptCategory.Expense, paymentMethod: PaymentMethod.EWallet },
+    { id: 'rec-002', receiptNumber: 'R-002', from: 'Office Supplies Co.', date: '2024-07-10', amount: -2500, category: ReceiptCategory.BusinessExpense, paymentMethod: PaymentMethod.GCash, photoUrl: 'https://i.imgur.com/gBFy1H8.jpeg' },
+    { id: 'rec-003', receiptNumber: 'R-003', from: 'Client B', date: '2024-06-15', amount: 5000, category: ReceiptCategory.ProductSale, paymentMethod: PaymentMethod.PayMaya },
+    { id: 'rec-004', receiptNumber: 'R-004', from: 'Internet Provider', date: '2024-07-05', amount: -1500, category: ReceiptCategory.BusinessExpense, paymentMethod: PaymentMethod.GCash },
 ];
 
 const initialFeedback: ClientFeedback[] = [

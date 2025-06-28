@@ -1,5 +1,6 @@
 {
   "name": "Credibee: Financial Empowerment for Freelancers",
   "description": "An MVP of a mobile-first web application designed to help self-employed Filipinos manage finances, generate invoices, and build creditworthiness.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "prompt": ""
 }

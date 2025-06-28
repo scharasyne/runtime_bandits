@@ -25,7 +25,7 @@ export enum InvoiceStatus {
 }
 
 export interface Invoice {
-  id: string;
+  id:string;
   invoiceNumber: string;
   clientName: string;
   clientEmail: string;
@@ -40,13 +40,14 @@ export interface Invoice {
 export enum ReceiptCategory {
   ProductSale = 'Product Sale',
   ServiceFee = 'Service Fee',
-  Expense = 'Expense',
+  BusinessExpense = 'Business Expense',
   Other = 'Other',
 }
 
 export enum PaymentMethod {
     BankTransfer = 'Bank Transfer',
-    EWallet = 'E-Wallet',
+    GCash = 'GCash',
+    PayMaya = 'PayMaya',
     Cash = 'Cash',
     Other = 'Other'
 }
@@ -54,12 +55,13 @@ export enum PaymentMethod {
 export interface Receipt {
   id: string;
   receiptNumber: string;
-  from: string;
+  from: string; // From client or to vendor
   date: string;
-  amount: number;
+  amount: number; // Positive for income, negative for expense
   category: ReceiptCategory;
   paymentMethod: PaymentMethod;
   notes?: string;
+  photoUrl?: string; // URL for an uploaded image of a physical receipt
 }
 
 export interface ClientFeedback {

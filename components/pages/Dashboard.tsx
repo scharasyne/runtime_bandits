@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useCredibee } from '../../hooks/useCredibee';
@@ -67,7 +66,7 @@ const Dashboard: React.FC = () => {
             dataMap[month].revenue += subtotal * (1 + inv.taxRate / 100);
         });
 
-        receipts.filter(r => r.category === ReceiptCategory.Expense).forEach(rec => {
+        receipts.filter(r => r.category === ReceiptCategory.BusinessExpense).forEach(rec => {
             const month = new Date(rec.date).toLocaleString('default', { month: 'short' });
             if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0};
             dataMap[month].expenses += Math.abs(rec.amount);
@@ -176,4 +175,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-

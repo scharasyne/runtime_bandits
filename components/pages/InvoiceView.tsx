@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCredibee } from '../../hooks/useCredibee';
@@ -60,6 +59,7 @@ const InvoiceView: React.FC = () => {
     
     const paymentUrl = `https://pay.credibee.ph/dummy-payment?invoiceId=${invoice.invoiceNumber}&amount=${total}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(paymentUrl)}&qzone=1`;
+
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -168,6 +168,7 @@ const InvoiceView: React.FC = () => {
                             </div>
                         </section>
                     )}
+
 
                     {invoice.notes && (
                          <section className="mb-8">
