@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
-import { useTranslation } from '../../utils/localization';
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
     <div className="flex">
@@ -15,7 +14,6 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
 
 const Feedback: React.FC = () => {
     const { state } = useCredibee();
-    const t = useTranslation();
     const { user, feedback, invoices } = state;
     const [linkCopied, setLinkCopied] = useState(false);
     
@@ -103,7 +101,7 @@ const Feedback: React.FC = () => {
                         onClick={handleCopyLink} 
                         className="bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors"
                     >
-                        {linkCopied ? t('copied') : t('copyLink')}
+                        {linkCopied ? 'Copied' : 'Copy Link'}
                     </button>
                 </div>
                 <div className="flex gap-2">

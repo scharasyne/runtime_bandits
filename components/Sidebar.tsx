@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useTranslation } from '../utils/localization';
 import logo from '../logo.png';
 
 const HomeIcon: React.FC<{className?: string}> = ({className}) => (
@@ -31,17 +30,16 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
-    const t = useTranslation();
     const navLinkClasses = "flex items-center px-3 py-2.5 text-slate-200 hover:bg-credibee-primary-800 rounded-lg transition-colors text-sm font-medium";
     const activeNavLinkClasses = "bg-credibee-primary-900 text-white";
 
     const navItems = [
-        { to: '/', icon: HomeIcon, label: t('dashboard') },
+        { to: '/', icon: HomeIcon, label: 'Dashboard' },
         { to: '/transactions', icon: CreditCardIcon, label: 'Transactions' },
-        { to: '/invoices', icon: FileTextIcon, label: t('invoices') },
-        { to: '/receipts', icon: ReceiptIcon, label: t('receipts') },
-        { to: '/feedback', icon: StarIcon, label: t('feedback') },
-        { to: '/profile', icon: UserIcon, label: t('profile') },
+        { to: '/invoices', icon: FileTextIcon, label: 'Invoices' },
+        { to: '/receipts', icon: ReceiptIcon, label: 'Receipts' },
+        { to: '/feedback', icon: StarIcon, label: 'Feedback' },
+        { to: '/profile', icon: UserIcon, label: 'Profile' },
     ];
 
     return (
@@ -68,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
                 <div className="mt-auto pt-4 border-t border-credibee-primary-800">
                     <a href="#" className={navLinkClasses}>
                         <LogOutIcon className="h-5 w-5 mr-3 flex-shrink-0" />
-                        <span>{t('logout')}</span>
+                        <span>Logout</span>
                     </a>
                 </div>
             </div>

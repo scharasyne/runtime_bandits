@@ -4,7 +4,6 @@ import { useCredibee } from '../../hooks/useCredibee';
 import { calculateFinancialSummary } from '../../utils/financialCalculations';
 import { Receipt, ReceiptCategory, PaymentMethod, InvoiceStatus } from '../../types';
 import Card from '../common/Card';
-import { useTranslation } from '../../utils/localization';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 
 const COLORS = ['#ffbf01', '#ffa400', '#ffe9af', '#ff9500', '#e67e00'];
@@ -12,7 +11,6 @@ const COLORS = ['#ffbf01', '#ffa400', '#ffe9af', '#ff9500', '#e67e00'];
 const Receipts: React.FC = () => {
     const { state } = useCredibee();
     const navigate = useNavigate();
-    const t = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
     const [paymentMethodFilter, setPaymentMethodFilter] = useState('All');
@@ -96,13 +94,13 @@ const Receipts: React.FC = () => {
         <div className="space-y-6">
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card title={t('totalIncome')}><p className="text-3xl font-bold text-green-600">₱{summary.totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p></Card>
-                <Card title={t('totalExpenses')}><p className="text-3xl font-bold text-red-600">₱{Math.abs(summary.totalExpenses).toLocaleString(undefined, {minimumFractionDigits: 2})}</p></Card>
-                <Card title={t('netIncome')}><p className="text-3xl font-bold text-slate-800">₱{summary.netIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p></Card>
+                <Card title="Total Income"><p className="text-3xl font-bold text-green-600">₱{summary.totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p></Card>
+                <Card title="Total Expenses"><p className="text-3xl font-bold text-red-600">₱{Math.abs(summary.totalExpenses).toLocaleString(undefined, {minimumFractionDigits: 2})}</p></Card>
+                <Card title="Net Income"><p className="text-3xl font-bold text-slate-800">₱{summary.netIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p></Card>
             </div>
             {/* Analytics */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                 <Card className="lg:col-span-2" title={t('incomeVsExpenses')}>
+                 <Card className="lg:col-span-2" title="Income vs Expenses">
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false}/>
@@ -115,7 +113,7 @@ const Receipts: React.FC = () => {
                         </BarChart>
                     </ResponsiveContainer>
                 </Card>
-                <Card title={t('paymentMethods')}>
+                <Card title="Payment Methods">
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
                             <Pie data={paymentMethodData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
@@ -128,18 +126,18 @@ const Receipts: React.FC = () => {
                 </Card>
             </div>
             
-            <Card title={t('allReceipts')} action={
+            <Card title="All Receipts" action={
                 <div className="flex items-center gap-2">
-                    <button onClick={exportToCSV} className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors">{t('exportToCsv')}</button>
+                    <button onClick={exportToCSV} className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors">Export to CSV</button>
                     <button onClick={() => navigate('/receipts/new')} className="bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors">
-                        {t('createExpense')}
+                        Create Expense
                     </button>
                 </div>
             }>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <input
                         type="text"
-                        placeholder={t('searchBySource')}
+                        placeholder="Search by source name or receipt number..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500"
@@ -149,7 +147,7 @@ const Receipts: React.FC = () => {
                         onChange={e => setCategoryFilter(e.target.value)}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500 bg-white"
                     >
-                        <option value="All">{t('allCategories')}</option>
+                        <option value="All">All Categories</option>
                         {Object.values(ReceiptCategory).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                     </select>
                      <select
@@ -157,7 +155,7 @@ const Receipts: React.FC = () => {
                         onChange={e => setPaymentMethodFilter(e.target.value)}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500 bg-white"
                     >
-                        <option value="All">{t('allPaymentMethods')}</option>
+                        <option value="All">All Payment Methods</option>
                         {Object.values(PaymentMethod).map(pm => <option key={pm} value={pm}>{pm}</option>)}
                     </select>
                 </div>
@@ -165,11 +163,11 @@ const Receipts: React.FC = () => {
                     <table className="min-w-full divide-y divide-slate-200">
                         <thead className="bg-slate-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('date')}</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('fromTo')}</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('category')}</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">{t('amount')}</th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">{t('actions')}</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">From/To</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Category</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
+                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-slate-200">
@@ -182,16 +180,16 @@ const Receipts: React.FC = () => {
                                         {receipt.amount >= 0 ? '+' : ''}₱{receipt.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-4">
-                                       <button onClick={() => navigate(`/receipts/${receipt.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">{t('view')}</button>
+                                       <button onClick={() => navigate(`/receipts/${receipt.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">View</button>
                                        {receipt.amount < 0 && (
-                                            <button onClick={() => navigate(`/receipts/edit/${receipt.id}`)} className="text-slate-600 hover:text-slate-900">{t('edit')}</button>
+                                            <button onClick={() => navigate(`/receipts/edit/${receipt.id}`)} className="text-slate-600 hover:text-slate-900">Edit</button>
                                        )}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                     {filteredReceipts.length === 0 && <p className="text-center py-8 text-slate-500">{t('noReceiptsFound')}</p>}
+                     {filteredReceipts.length === 0 && <p className="text-center py-8 text-slate-500">No receipts found matching your criteria.</p>}
                 </div>
             </Card>
         </div>

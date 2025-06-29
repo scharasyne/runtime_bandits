@@ -1,7 +1,6 @@
 import React from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
-import { useTranslation } from '../../utils/localization';
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
     <div className="flex">
@@ -20,7 +19,6 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
 
 const PublicProfile: React.FC = () => {
     const { state } = useCredibee();
-    const t = useTranslation();
     const { user, feedback, invoices, receipts } = state;
 
     // Calculate business statistics

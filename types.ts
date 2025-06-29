@@ -151,7 +151,6 @@ export interface AppState {
   feedback: ClientFeedback[];
   financialGoals: FinancialGoal[];
   crediScore: CrediScoreMetrics;
-  language: 'en' | 'tl';
 }
 
 export type AppAction =
@@ -168,5 +167,4 @@ export type AppAction =
   | { type: 'ADD_FINANCIAL_GOAL'; payload: FinancialGoal }
   | { type: 'UPDATE_FINANCIAL_GOAL'; payload: FinancialGoal }
   | { type: 'DELETE_FINANCIAL_GOAL'; payload: string }
-  | { type: 'UPDATE_CREDISCORE'; payload: CrediScoreMetrics }
-  | { type: 'TOGGLE_LANGUAGE' };
+  | { type: 'UPDATE_CREDISCORE'; payload: CrediScoreMetrics };

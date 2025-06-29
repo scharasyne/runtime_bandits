@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useCredibee } from '../../hooks/useCredibee';
-import { useTranslation } from '../../utils/localization';
 import { calculateFinancialSummary } from '../../utils/financialCalculations';
 import { InvoiceStatus, ReceiptCategory, Invoice, Receipt, TransactionCategory } from '../../types';
 import Card from '../common/Card';
@@ -25,7 +24,6 @@ const FileTextIcon: React.FC<{className?: string}> = ({className}) => (
 
 const Dashboard: React.FC = () => {
     const { state } = useCredibee();
-    const t = useTranslation();
     const { user, invoices, receipts, financialGoals, crediScore } = state;
 
     const [tips, setTips] = useState<string[]>([]);
@@ -140,7 +138,7 @@ const Dashboard: React.FC = () => {
         <div className="space-y-4 sm:space-y-6">
             {/* Welcome Header */}
             <div className="bg-gradient-to-r from-credibee-primary-600 to-credibee-primary-800 rounded-lg p-4 sm:p-6 text-white">
-                <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t('hello')}, {user.name}!</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hello, {user.name}!</h1>
                 <p className="text-credibee-primary-100 text-sm sm:text-base">Welcome to your financial dashboard</p>
             </div>
             
@@ -149,7 +147,7 @@ const Dashboard: React.FC = () => {
                 <Card className="p-3 sm:p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">{t('crediScore')}</h4>
+                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">CrediScore</h4>
                             <p className={`text-xl sm:text-2xl lg:text-3xl font-bold ${getScoreColor(crediScore.score)}`}>
                                 {crediScore.score}
                             </p>
@@ -164,7 +162,7 @@ const Dashboard: React.FC = () => {
                 <Card className="p-3 sm:p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">{t('totalRevenue')}</h4>
+                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">Total Revenue</h4>
                             <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                             <p className="text-xs text-green-600">+{((stats.totalRevenue / (stats.totalRevenue + stats.totalExpenses)) * 100).toFixed(1)}%</p>
                         </div>
@@ -282,8 +280,8 @@ const Dashboard: React.FC = () => {
                         </div>
                     </Card>
 
-                    {/* Financial Goals */}
-                    <Card title="Financial Goals" className="p-4 sm:p-6">
+                    {/* FGoals */}
+                    <Card title="Goals" className="p-4 sm:p-6">
                         <div className="space-y-4">
                             {activeGoals.map(goal => (
                                 <div key={goal.id} className="space-y-2">
@@ -295,8 +293,8 @@ const Dashboard: React.FC = () => {
                                     </div>
                                     <div className="space-y-1">
                                         <div className="flex justify-between text-sm">
-                                            <span>₱{goal.currentAmount.toLocaleString()}</span>
-                                            <span>₱{goal.targetAmount.toLocaleString()}</span>
+                                            <span>{goal.currentAmount.toLocaleString()}</span>
+                                            <span>{goal.targetAmount.toLocaleString()}</span>
                                         </div>
                                         <div className="w-full bg-slate-200 rounded-full h-2">
                                             <div 
@@ -314,7 +312,7 @@ const Dashboard: React.FC = () => {
                     </Card>
 
                     {/* AI Tips */}
-                    <Card title={t('aiPoweredTips')} className="p-4 sm:p-6" action={
+                    <Card title="AI-Powered Tips" className="p-4 sm:p-6" action={
                         <button 
                             onClick={handleGetTips} 
                             disabled={isLoadingTips} 

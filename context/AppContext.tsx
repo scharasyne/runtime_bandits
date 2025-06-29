@@ -654,8 +654,7 @@ const initialState: AppState = {
     receipts: initialReceipts,
     feedback: initialFeedback,
     financialGoals: initialFinancialGoals,
-    crediScore: initialCrediScore,
-    language: 'en'
+    crediScore: initialCrediScore
 };
 
 const appReducer = (state: AppState, action: AppAction): AppState => {
@@ -703,9 +702,6 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
             break;
         case 'UPDATE_CREDISCORE':
             newState = { ...state, crediScore: action.payload };
-            break;
-        case 'TOGGLE_LANGUAGE':
-            newState = { ...state, language: state.language === 'en' ? 'tl' : 'en' };
             break;
         default:
             return state;

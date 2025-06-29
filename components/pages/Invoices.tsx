@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCredibee } from '../../hooks/useCredibee';
 import { Invoice, InvoiceStatus } from '../../types';
 import Card from '../common/Card';
-import { useTranslation } from '../../utils/localization';
 
 const getStatusColor = (status: InvoiceStatus) => {
     switch (status) {
@@ -19,7 +17,6 @@ const getStatusColor = (status: InvoiceStatus) => {
 const Invoices: React.FC = () => {
     const { state } = useCredibee();
     const navigate = useNavigate();
-    const t = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
 
@@ -31,15 +28,15 @@ const Invoices: React.FC = () => {
     }).sort((a,b) => new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime());
 
     return (
-        <Card title={t('allInvoices')} action={
+        <Card title="All Invoices" action={
             <button onClick={() => navigate('/invoices/new')} className="bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors">
-                {t('createInvoice')}
+                Create Invoice
             </button>
         }>
             <div className="flex flex-col md:flex-row gap-4 mb-4">
                 <input
                     type="text"
-                    placeholder={t('searchByClient')}
+                    placeholder="Search by client name or invoice number..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full md:w-1/2 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500"
@@ -49,7 +46,7 @@ const Invoices: React.FC = () => {
                     onChange={(e) => setStatusFilter(e.target.value)}
                     className="w-full md:w-1/2 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500 bg-white"
                  >
-                    <option value="All">{t('allStatuses')}</option>
+                    <option value="All">All Statuses</option>
                     {Object.values(InvoiceStatus).map(status => (
                         <option key={status} value={status}>{status}</option>
                     ))}
@@ -59,12 +56,12 @@ const Invoices: React.FC = () => {
                 <table className="min-w-full divide-y divide-slate-200">
                     <thead className="bg-slate-50">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('invoiceNo')}</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('clientName')}</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('dueDate')}</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('total')}</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('status')}</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t('actions')}</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Invoice #</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Client Name</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Due Date</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Total</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
@@ -82,15 +79,15 @@ const Invoices: React.FC = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
-                                        <button onClick={() => navigate(`/invoices/${invoice.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">{t('view')}</button>
-                                        <button onClick={() => navigate(`/invoices/edit/${invoice.id}`)} className="text-slate-600 hover:text-slate-900">{t('edit')}</button>
+                                        <button onClick={() => navigate(`/invoices/${invoice.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">View</button>
+                                        <button onClick={() => navigate(`/invoices/edit/${invoice.id}`)} className="text-slate-600 hover:text-slate-900">Edit</button>
                                     </td>
                                 </tr>
                             );
                         })}
                     </tbody>
                 </table>
-                 {filteredInvoices.length === 0 && <p className="text-center py-8 text-slate-500">{t('noInvoicesFound')}</p>}
+                 {filteredInvoices.length === 0 && <p className="text-center py-8 text-slate-500">No invoices found matching your criteria.</p>}
             </div>
         </Card>
     );

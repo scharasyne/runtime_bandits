@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
-import { useTranslation } from '../../utils/localization';
 
 const StarRating: React.FC<{ rating: number, onRate?: (rating: number) => void, interactive?: boolean }> = ({ rating, onRate, interactive }) => (
     <div className="flex justify-center">
@@ -24,7 +23,6 @@ const ClientFeedback: React.FC = () => {
     const { invoiceId } = useParams();
     const navigate = useNavigate();
     const { state, dispatch } = useCredibee();
-    const t = useTranslation();
     const { user, feedback, invoices } = state;
 
     const [newRating, setNewRating] = useState(0);

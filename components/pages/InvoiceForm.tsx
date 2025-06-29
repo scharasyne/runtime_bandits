@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCredibee } from '../../hooks/useCredibee';
 import { Invoice, InvoiceItem, InvoiceStatus } from '../../types';
 import Card from '../common/Card';
-import { useTranslation } from '../../utils/localization';
 
 const generateInvoiceNumber = (invoices: Invoice[]): string => {
     const currentYear = new Date().getFullYear();
@@ -34,7 +32,6 @@ const InvoiceForm: React.FC = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { state, dispatch } = useCredibee();
-    const t = useTranslation();
     const isEditing = id !== undefined;
     
     const [invoice, setInvoice] = useState<Omit<Invoice, 'id'>>({
@@ -110,11 +107,11 @@ const InvoiceForm: React.FC = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex justify-between items-center mb-6">
-                 <h1 className="text-3xl font-bold text-slate-800">{isEditing ? t('editInvoice') : t('createInvoice')}</h1>
+                 <h1 className="text-3xl font-bold text-slate-800">{isEditing ? 'Edit Invoice' : 'Create Invoice'}</h1>
                  <div>
-                     <button type="button" onClick={() => navigate('/invoices')} className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg mr-2">{t('backToInvoices')}</button>
+                     <button type="button" onClick={() => navigate('/invoices')} className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg mr-2">Back to Invoices</button>
                      <button type="submit" className="bg-credibee-primary-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-primary-800 transition-colors">
-                        {isEditing ? t('updateInvoice') : t('saveInvoice')}
+                        {isEditing ? 'Update Invoice' : 'Save Invoice'}
                     </button>
                  </div>
             </div>
@@ -124,28 +121,28 @@ const InvoiceForm: React.FC = () => {
                 <Card>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('clientInfo')}</h3>
+                            <h3 className="text-lg font-semibold text-slate-800 mb-4">Client Information</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="clientName" className="block text-sm font-medium text-slate-700">{t('clientName')}</label>
+                                    <label htmlFor="clientName" className="block text-sm font-medium text-slate-700">Client Name</label>
                                     <input type="text" name="clientName" id="clientName" value={invoice.clientName} onChange={handleInputChange} required className="mt-1 block w-full input"/>
                                 </div>
                                 <div>
-                                    <label htmlFor="clientEmail" className="block text-sm font-medium text-slate-700">{t('clientEmail')}</label>
+                                    <label htmlFor="clientEmail" className="block text-sm font-medium text-slate-700">Client Email</label>
                                     <input type="email" name="clientEmail" id="clientEmail" value={invoice.clientEmail} onChange={handleInputChange} required className="mt-1 block w-full input"/>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('invoiceDetails')}</h3>
+                            <h3 className="text-lg font-semibold text-slate-800 mb-4">Invoice Details</h3>
                             <div className="space-y-4">
                                 <div className="flex gap-4">
                                     <div className="flex-1">
-                                        <label htmlFor="invoiceNumber" className="block text-sm font-medium text-slate-700">{t('invoiceNo')}</label>
+                                        <label htmlFor="invoiceNumber" className="block text-sm font-medium text-slate-700">Invoice #</label>
                                         <input type="text" name="invoiceNumber" id="invoiceNumber" value={invoice.invoiceNumber} readOnly className="mt-1 block w-full input bg-slate-100"/>
                                     </div>
                                     <div>
-                                        <label htmlFor="status" className="block text-sm font-medium text-slate-700">{t('status')}</label>
+                                        <label htmlFor="status" className="block text-sm font-medium text-slate-700">Status</label>
                                         <select name="status" id="status" value={invoice.status} onChange={e => setInvoice(p => ({...p, status: e.target.value as InvoiceStatus}))} className="mt-1 block w-full input">
                                             {Object.values(InvoiceStatus).map(s => <option key={s} value={s}>{s}</option>)}
                                         </select>
@@ -153,11 +150,11 @@ const InvoiceForm: React.FC = () => {
                                 </div>
                                 <div className="flex gap-4">
                                     <div className="flex-1">
-                                        <label htmlFor="issueDate" className="block text-sm font-medium text-slate-700">{t('issueDate')}</label>
+                                        <label htmlFor="issueDate" className="block text-sm font-medium text-slate-700">Issue Date</label>
                                         <input type="date" name="issueDate" id="issueDate" value={invoice.issueDate} onChange={handleInputChange} required className="mt-1 block w-full input"/>
                                     </div>
                                     <div className="flex-1">
-                                        <label htmlFor="dueDate" className="block text-sm font-medium text-slate-700">{t('dueDate')}</label>
+                                        <label htmlFor="dueDate" className="block text-sm font-medium text-slate-700">Due Date</label>
                                         <input type="date" name="dueDate" id="dueDate" value={invoice.dueDate} onChange={handleInputChange} required className="mt-1 block w-full input"/>
                                     </div>
                                 </div>
@@ -167,15 +164,15 @@ const InvoiceForm: React.FC = () => {
                 </Card>
 
                 {/* Items */}
-                <Card title={t('items')}>
+                <Card title="Items">
                      <div className="overflow-x-auto">
                         <table className="min-w-full">
                             <thead>
                                 <tr>
-                                    <th className="text-left text-sm font-medium text-slate-500 pb-2 w-2/4">{t('description')}</th>
-                                    <th className="text-left text-sm font-medium text-slate-500 pb-2">{t('quantity')}</th>
-                                    <th className="text-left text-sm font-medium text-slate-500 pb-2">{t('price')}</th>
-                                    <th className="text-left text-sm font-medium text-slate-500 pb-2">{t('total')}</th>
+                                    <th className="text-left text-sm font-medium text-slate-500 pb-2 w-2/4">Description</th>
+                                    <th className="text-left text-sm font-medium text-slate-500 pb-2">Quantity</th>
+                                    <th className="text-left text-sm font-medium text-slate-500 pb-2">Price</th>
+                                    <th className="text-left text-sm font-medium text-slate-500 pb-2">Total</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -196,34 +193,34 @@ const InvoiceForm: React.FC = () => {
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" onClick={addItem} className="mt-4 bg-credibee-primary-100 text-credibee-primary-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-200 transition-colors">{t('addItem')}</button>
+                    <button type="button" onClick={addItem} className="mt-4 bg-credibee-primary-100 text-credibee-primary-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-200 transition-colors">Add Item</button>
                 </Card>
 
                 {/* Notes and Totals */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <Card title={t('notesAndTerms')}>
-                        <textarea name="notes" value={invoice.notes} onChange={handleInputChange} rows={6} className="w-full input"></textarea>
-                    </Card>
-                     <Card>
+                <Card title="Notes and Terms">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <textarea name="notes" value={invoice.notes || ''} onChange={handleInputChange} rows={6} className="w-full input" placeholder="Payment terms, thank you message, etc."></textarea>
+                        </div>
                         <div className="space-y-4">
-                            <div className="flex justify-between text-slate-600">
-                                <span>{t('subtotal')}</span>
+                            <div className="flex justify-between">
+                                <span>Subtotal</span>
                                 <span>₱{subtotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                             </div>
-                            <div className="flex justify-between text-slate-600">
-                                <span>{t('tax')}</span>
-                                <span>₱{taxAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                            <div className="flex justify-between">
+                                <span>Tax ({invoice.taxRate}%)</span>
+                                <input type="number" value={invoice.taxRate} onChange={e => setInvoice(p => ({...p, taxRate: Number(e.target.value)}))} className="w-20 input text-right" min="0" max="100" step="0.1"/> %
                             </div>
-                            <div className="border-t my-2"></div>
-                            <div className="flex justify-between text-xl font-bold text-slate-900">
-                                <span>{t('total')}</span>
+                            <div className="flex justify-between font-bold text-lg border-t pt-4">
+                                <span>Total</span>
                                 <span>₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                             </div>
                         </div>
-                     </Card>
-                </div>
+                    </div>
+                </Card>
             </div>
-             <style>{`.input { border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.5rem 0.75rem; } .input:focus { outline: 2px solid #52c1ff; border-color: #52c1ff }`}</style>
+
+            <style>{`.input { border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.5rem 0.75rem; } .input:focus { outline: 2px solid #52c1ff; border-color: #52c1ff }`}</style>
         </form>
     );
 };
