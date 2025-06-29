@@ -59,6 +59,7 @@ const InvoiceView: React.FC = () => {
     
     const paymentUrl = `https://pay.credibee.ph/dummy-payment?invoiceId=${invoice.invoiceNumber}&amount=${total}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(paymentUrl)}&qzone=1`;
+    const publicProfileUrl = `${window.location.origin}/#/public/${user.id}`;
 
 
     return (
@@ -149,7 +150,7 @@ const InvoiceView: React.FC = () => {
                     </section>
 
                     {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue) && (
-                        <section className="my-12 p-6 bg-credibee-blue-50 rounded-lg border border-credibee-blue-200">
+                        <section className="my-12 p-6 bg-credibee-blue-50 rounded-lg border border-credibee-blue-200 no-print">
                             <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('payNow')}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                 <div className="text-center">
@@ -169,6 +170,19 @@ const InvoiceView: React.FC = () => {
                         </section>
                     )}
 
+                    {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue || invoice.status === InvoiceStatus.Paid) && (
+                        <section className="my-12 p-6 bg-slate-50 rounded-lg border border-slate-200 text-center no-print">
+                            <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('leaveReviewPrompt')}</h3>
+                            <a 
+                                href={publicProfileUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-block bg-credibee-green-500 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-green-600 transition-transform hover:scale-105"
+                            >
+                                {t('leaveReviewAction')}
+                            </a>
+                        </section>
+                    )}
 
                     {invoice.notes && (
                          <section className="mb-8">

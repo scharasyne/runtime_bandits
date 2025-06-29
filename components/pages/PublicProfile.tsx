@@ -2,6 +2,7 @@
 import React from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
+import { useTranslation } from '../../utils/localization';
 
 const StarRating: React.FC<{ rating: number, onRate?: (rating: number) => void, interactive?: boolean }> = ({ rating, onRate, interactive }) => (
     <div className="flex">
@@ -24,6 +25,7 @@ const PublicProfile: React.FC = () => {
     // In a real app, this would fetch data based on `userId` from useParams.
     // For this MVP, we'll just use the context data as a stand-in.
     const { state, dispatch } = useCredibee();
+    const t = useTranslation();
     const { user, feedback } = state;
 
     const [newRating, setNewRating] = React.useState(0);
@@ -57,35 +59,35 @@ const PublicProfile: React.FC = () => {
                      <p className="text-slate-500">Operated by {user.name}</p>
                 </div>
                 
-                <Card title="Leave Feedback">
+                <Card title={t('leaveFeedback')}>
                     {submitted ? (
                         <div className="text-center py-8">
-                            <h3 className="text-xl font-semibold text-green-600">Thank you!</h3>
-                            <p className="text-slate-600 mt-2">Your feedback has been submitted successfully.</p>
+                            <h3 className="text-xl font-semibold text-green-600">{t('thankYou')}</h3>
+                            <p className="text-slate-600 mt-2">{t('feedbackSubmitted')}</p>
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Your Name</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">{t('yourName')}</label>
                                 <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} required className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500"/>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Your Rating</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">{t('yourRating')}</label>
                                 <StarRating rating={newRating} onRate={setNewRating} interactive={true} />
                             </div>
                              <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Your Review</label>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">{t('yourReview')}</label>
                                 <textarea value={newComment} onChange={e => setNewComment(e.target.value)} required rows={4} className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500"></textarea>
                             </div>
                             <button type="submit" className="w-full bg-credibee-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-blue-800 transition-colors">
-                                Submit Feedback
+                                {t('submitFeedback')}
                             </button>
                         </form>
                     )}
                 </Card>
 
                 <div className="mt-8">
-                    <h2 className="text-xl font-semibold text-slate-800 mb-4">What Clients Are Saying</h2>
+                    <h2 className="text-xl font-semibold text-slate-800 mb-4">{t('whatClientsSay')}</h2>
                      <div className="space-y-4">
                         {feedback.length > 0 ? feedback.map(fb => (
                             <div key={fb.id} className="p-4 border border-slate-200 rounded-lg bg-white">
@@ -99,7 +101,7 @@ const PublicProfile: React.FC = () => {
                                <p className="text-slate-600 mt-3 italic">"{fb.comment}"</p>
                             </div>
                         )) : (
-                            <p className="text-center text-slate-500 py-8">Be the first to leave a review!</p>
+                            <p className="text-center text-slate-500 py-8">{t('beFirstToReview')}</p>
                         )}
                     </div>
                 </div>

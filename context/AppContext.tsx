@@ -53,7 +53,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         case 'DELETE_RECEIPT':
             return { ...state, receipts: state.receipts.filter(rec => rec.id !== action.payload) };
         case 'ADD_FEEDBACK':
-            return { ...state, feedback: [...state.feedback, action.payload] };
+            return { ...state, feedback: [action.payload, ...state.feedback] };
         case 'UPDATE_USER':
             return { ...state, user: { ...state.user, ...action.payload } };
         case 'TOGGLE_LANGUAGE':

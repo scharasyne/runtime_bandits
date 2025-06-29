@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
+import { useTranslation } from '../../utils/localization';
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
     <div className="flex">
@@ -15,10 +16,11 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
 
 const Feedback: React.FC = () => {
     const { state } = useCredibee();
+    const t = useTranslation();
     const { user, feedback } = state;
     const [linkCopied, setLinkCopied] = useState(false);
     
-    const publicProfileUrl = `${window.location.origin}${window.location.pathname}#/public/${user.id}`;
+    const publicProfileUrl = `${window.location.origin}/#/public/${user.id}`;
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(publicProfileUrl);
@@ -28,17 +30,17 @@ const Feedback: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <Card title="Collect Feedback">
-                <p className="text-slate-600 mb-4">Share your public profile link with clients to collect ratings and testimonials.</p>
+            <Card title={t('collectFeedback')}>
+                <p className="text-slate-600 mb-4">{t('sharePublicProfile')}</p>
                 <div className="flex flex-col sm:flex-row gap-2">
                     <input type="text" readOnly value={publicProfileUrl} className="flex-grow bg-slate-100 border border-slate-300 rounded-lg px-4 py-2 text-slate-700" />
                     <button onClick={handleCopyLink} className="bg-credibee-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-blue-800 transition-colors">
-                        {linkCopied ? 'Copied!' : 'Copy Link'}
+                        {linkCopied ? t('copied') : t('copyLink')}
                     </button>
                 </div>
             </Card>
 
-            <Card title="Client Testimonials">
+            <Card title={t('clientTestimonials')}>
                 <div className="space-y-6">
                     {feedback.length > 0 ? feedback.map(fb => (
                         <div key={fb.id} className="p-4 border border-slate-200 rounded-lg bg-slate-50">
@@ -52,7 +54,7 @@ const Feedback: React.FC = () => {
                            <p className="text-slate-600 mt-3 italic">"{fb.comment}"</p>
                         </div>
                     )) : (
-                        <p className="text-center text-slate-500 py-8">No feedback yet. Share your link to get started!</p>
+                        <p className="text-center text-slate-500 py-8">{t('noFeedback')}</p>
                     )}
                 </div>
             </Card>

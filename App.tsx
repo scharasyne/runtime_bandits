@@ -30,7 +30,7 @@ const App: React.FC = () => {
           <Route path="feedback" element={<Feedback />} />
           <Route path="profile" element={<Profile />} />
         </Route>
-        <Route path="/public/:userId" element={<PublicProfile />} />
+        <Route path="public/:userId" element={<PublicProfile />} />
       </Routes>
     </HashRouter>
   );
