@@ -59,11 +59,58 @@ const InvoiceView: React.FC = () => {
     
     const paymentUrl = `${window.location.origin}/#/payment/${invoice.invoiceNumber}/${total}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(paymentUrl)}&qzone=1`;
+    const feedbackUrl = `${window.location.origin}/#/feedback/${invoice.id}`;
+    const feedbackQrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(feedbackUrl)}&qzone=1`;
     const publicProfileUrl = `${window.location.origin}/#/public/${user.id}`;
 
 
     return (
         <div className="max-w-4xl mx-auto">
+            <style>{`
+                @media print {
+                    .print-payment-section {
+                        page-break-inside: avoid;
+                        border: 1px solid #ccc !important;
+                        background: #f9f9f9 !important;
+                        margin: 20px 0 !important;
+                        padding: 15px !important;
+                    }
+                    .print-feedback-section {
+                        page-break-inside: avoid;
+                        border: 1px solid #ccc !important;
+                        background: #f9f9f9 !important;
+                        margin: 20px 0 !important;
+                        padding: 15px !important;
+                    }
+                    .print-qr-code {
+                        max-width: 120px !important;
+                        max-height: 120px !important;
+                        border: 2px solid #666 !important;
+                    }
+                    .print-feedback-qr {
+                        max-width: 90px !important;
+                        max-height: 90px !important;
+                        border: 2px solid #666 !important;
+                        margin: 0 auto !important;
+                    }
+                    .print-url {
+                        font-family: 'Courier New', monospace !important;
+                        font-size: 10px !important;
+                        word-break: break-all;
+                        color: #000 !important;
+                        border: 1px solid #ccc;
+                        padding: 4px;
+                        background: #fff;
+                        border-radius: 3px;
+                    }
+                    .print-section-title {
+                        font-size: 16px !important;
+                        font-weight: bold !important;
+                        margin-bottom: 10px !important;
+                        color: #333 !important;
+                    }
+                }
+            `}</style>
              <div className="flex justify-between items-center mb-4 no-print">
                 <button onClick={() => navigate('/invoices')} className="text-credibee-primary-700 font-semibold hover:underline">
                     &larr; {t('backToInvoices')}
@@ -150,36 +197,48 @@ const InvoiceView: React.FC = () => {
                     </section>
 
                     {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue) && (
-                        <section className="my-12 p-6 bg-credibee-primary-50 rounded-lg border border-credibee-primary-200 no-print">
-                            <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('payNow')}</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                                <div className="text-center">
-                                    <img src={qrCodeUrl} alt="Payment QR Code" className="w-40 h-40 mx-auto border-4 border-white rounded-lg shadow-md" />
-                                    <p className="text-sm text-slate-600 mt-2 font-medium">{t('scanToPay')}</p>
+                        <section className="my-12 p-6 bg-credibee-primary-50 rounded-lg border border-credibee-primary-200 print-payment-section">
+                            <h3 className="text-lg font-semibold text-slate-800 mb-4 print-section-title">{t('payNow')}</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center print:gap-4">
+                                <div className="text-center print:text-left">
+                                    <img src={qrCodeUrl} alt="Payment QR Code" className="w-40 h-40 mx-auto border-4 border-white rounded-lg shadow-md print-qr-code" />
+                                    <p className="text-sm text-slate-600 mt-2 font-medium print:text-xs print:mt-1">{t('scanToPay')}</p>
                                 </div>
-                                <div className="space-y-4 text-center md:text-left">
-                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-block w-full md:w-auto bg-credibee-primary-700 text-white px-8 py-3 rounded-lg text-base font-bold hover:bg-credibee-primary-800 transition-transform hover:scale-105">
+                                <div className="space-y-4 text-center md:text-left print:space-y-2 print:text-left">
+                                    <div className="inline-block w-full md:w-auto bg-credibee-primary-700 text-white px-8 py-3 rounded-lg text-base font-bold print:bg-gray-800 print:px-4 print:py-2 print:text-sm print:rounded">
                                         {t('payNow')} ₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}
-                                    </a>
-                                    <p className="text-xs text-slate-500 mt-4">{t('orPayWithLink')}</p>
-                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-credibee-primary-600 hover:underline break-all">
+                                    </div>
+                                    <p className="text-xs text-slate-500 mt-4 print:mt-2 print:text-xs">{t('orPayWithLink')}</p>
+                                    <div className="text-xs text-credibee-primary-600 break-all print-url">
                                         {paymentUrl}
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </section>
                     )}
 
                     {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue || invoice.status === InvoiceStatus.Paid) && (
-                        <section className="my-12 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200 text-center no-print">
-                            <div className="text-4xl mb-4">⭐</div>
-                            <h3 className="text-lg font-semibold text-slate-800 mb-2">Share Your Experience</h3>
-                            <p className="text-slate-600 mb-4">Your feedback helps us improve and helps others discover our services</p>
+                        <section className="my-12 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200 text-center print-feedback-section print:text-left">
+                            <div className="text-4xl mb-4 print:text-2xl print:mb-2 print:inline-block print:mr-2">⭐</div>
+                            <h3 className="text-lg font-semibold text-slate-800 mb-2 print-section-title print:inline-block print:mb-1">Share Your Experience</h3>
+                            <p className="text-slate-600 mb-4 print:text-sm print:mb-2">Your feedback helps us improve and helps others discover our services</p>
+                            <div className="print:grid print:grid-cols-2 print:gap-4 print:items-center">
+                                <div className="print:text-center">
+                                    <img src={feedbackQrCodeUrl} alt="Feedback QR Code" className="hidden print:block print-feedback-qr" />
+                                    <p className="hidden print:block print:text-xs print:mt-1">Scan for Feedback</p>
+                                </div>
+                                <div className="print:border print:border-gray-400 print:p-2 print:rounded">
+                                    <span className="print:text-sm print:font-semibold print:block print:mb-1">Feedback Link:</span>
+                                    <span className="print-url">
+                                        {feedbackUrl}
+                                    </span>
+                                </div>
+                            </div>
                             <a 
                                 href={`${window.location.origin}/#/feedback/${invoice.id}`}
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="inline-block bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-3 rounded-lg text-base font-semibold hover:from-green-600 hover:to-blue-600 transition-all hover:scale-105 shadow-lg"
+                                className="inline-block bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-3 rounded-lg text-base font-semibold hover:from-green-600 hover:to-blue-600 transition-all hover:scale-105 shadow-lg print:hidden"
                             >
                                 ✍️ Leave Feedback
                             </a>
