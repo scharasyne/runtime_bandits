@@ -87,7 +87,9 @@ const ClientFeedback: React.FC = () => {
                 rating: newRating,
                 comment: newComment.trim(),
                 date: new Date().toISOString(),
-                invoiceId: invoiceId
+                invoiceId: invoiceId,
+                isPublic: true,
+                isVerified: true // Set to true since it's linked to an actual invoice
             }
         });
         
@@ -160,7 +162,9 @@ const ClientFeedback: React.FC = () => {
                         <div className="text-right">
                             <p className="text-sm text-slate-600">Amount</p>
                             <p className="font-bold text-slate-800">
-                                ₱{invoice?.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                                ₱{invoice && (
+                                    invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0) * (1 + invoice.taxRate / 100)
+                                ).toLocaleString(undefined, {minimumFractionDigits: 2})}
                             </p>
                         </div>
                     </div>

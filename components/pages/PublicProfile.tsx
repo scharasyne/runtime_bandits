@@ -37,67 +37,28 @@ const PublicProfile: React.FC = () => {
             icon: '📊',
             label: 'Total Projects',
             value: totalInvoices.toString(),
-            color: 'text-blue-600'
-        },
-        {
-            icon: '💰',
-            label: 'Revenue Generated',
-            value: `$${totalRevenue.toLocaleString()}`,
-            color: 'text-green-600'
+            color: 'text-credibee-primary-600'
         },
         {
             icon: '⭐',
             label: 'Average Rating',
             value: averageRating,
-            color: 'text-yellow-600'
+            color: 'text-credibee-accent-600'
         },
         {
             icon: '👥',
             label: 'Happy Clients',
             value: totalClients.toString(),
-            color: 'text-purple-600'
-        },
-        {
-            icon: '✅',
-            label: 'Completed Projects',
-            value: completedProjects.toString(),
-            color: 'text-indigo-600'
-        },
-        {
-            icon: '🎯',
-            label: 'CrediScore',
-            value: state.crediScore.toString(),
-            color: 'text-orange-600'
+            color: 'text-credibee-primary-700'
         }
     ];
 
-    const services = [
-        {
-            title: 'Professional Services',
-            description: 'High-quality business solutions tailored to your needs',
-            icon: '🏢'
-        },
-        {
-            title: 'Consulting',
-            description: 'Expert advice and strategic guidance for your business',
-            icon: '💡'
-        },
-        {
-            title: 'Project Management',
-            description: 'Efficient project delivery with proven methodologies',
-            icon: '📈'
-        },
-        {
-            title: 'Custom Solutions',
-            description: 'Bespoke services designed specifically for your requirements',
-            icon: '⚡'
-        }
-    ];
+
     
     return (
-        <div className="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+        <div className="bg-gradient-to-br from-credibee-primary-50 to-credibee-accent-50 min-h-screen">
             {/* Hero Section */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+            <div className="bg-gradient-to-r from-credibee-primary-600 to-credibee-accent-600 text-white py-16">
                 <div className="container mx-auto max-w-4xl px-4 text-center">
                     <img 
                         src={user.avatarUrl} 
@@ -105,8 +66,8 @@ const PublicProfile: React.FC = () => {
                         className="h-32 w-32 rounded-full object-cover mx-auto mb-6 ring-4 ring-white/30" 
                     />
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">{user.businessName}</h1>
-                    <p className="text-xl mb-2 text-blue-100">Led by {user.name}</p>
-                    <p className="text-lg text-blue-100 max-w-2xl mx-auto">
+                    <p className="text-xl mb-2 text-credibee-primary-100">Led by {user.name}</p>
+                    <p className="text-lg text-credibee-primary-100 max-w-2xl mx-auto">
                         Professional business services with a proven track record of excellence and client satisfaction
                     </p>
                     <div className="mt-8 flex justify-center">
@@ -114,7 +75,7 @@ const PublicProfile: React.FC = () => {
                             <div className="flex items-center gap-3">
                                 <StarRating rating={Math.round(parseFloat(averageRating))} />
                                 <span className="text-lg font-semibold">{averageRating}/5</span>
-                                <span className="text-blue-100">({feedback.length} reviews)</span>
+                                <span className="text-credibee-primary-100">({feedback.length} reviews)</span>
                             </div>
                         </div>
                     </div>
@@ -125,7 +86,7 @@ const PublicProfile: React.FC = () => {
             <div className="py-12">
                 <div className="container mx-auto max-w-6xl px-4">
                     <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">Business Highlights</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {businessHighlights.map((highlight, index) => (
                             <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
                                 <div className="text-3xl mb-3">{highlight.icon}</div>
@@ -139,24 +100,10 @@ const PublicProfile: React.FC = () => {
                 </div>
             </div>
 
-            {/* Services Section */}
-            <div className="py-12 bg-white">
-                <div className="container mx-auto max-w-6xl px-4">
-                    <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">Our Services</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {services.map((service, index) => (
-                            <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
-                                <div className="text-4xl mb-4">{service.icon}</div>
-                                <h3 className="text-xl font-semibold text-slate-800 mb-3">{service.title}</h3>
-                                <p className="text-slate-600">{service.description}</p>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </div>
+
 
             {/* Testimonials Section */}
-            <div className="py-12 bg-slate-50">
+            <div className="py-12 bg-credibee-primary-50">
                 <div className="container mx-auto max-w-4xl px-4">
                     <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">What Our Clients Say</h2>
                     {feedback.length > 0 ? (
@@ -184,47 +131,19 @@ const PublicProfile: React.FC = () => {
                 </div>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="py-12 bg-white">
-                <div className="container mx-auto max-w-4xl px-4 text-center">
-                    <h2 className="text-3xl font-bold text-slate-800 mb-8">Why Choose Us?</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                                <span className="text-2xl">🏆</span>
-                            </div>
-                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Proven Excellence</h3>
-                            <p className="text-slate-600">Consistent delivery of high-quality results with a track record of satisfied clients</p>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                                <span className="text-2xl">⚡</span>
-                            </div>
-                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Fast Turnaround</h3>
-                            <p className="text-slate-600">Efficient processes and dedicated focus to meet your deadlines</p>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
-                                <span className="text-2xl">🤝</span>
-                            </div>
-                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Trusted Partner</h3>
-                            <p className="text-slate-600">Long-term relationships built on trust, transparency, and reliable service</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             {/* Call to Action */}
-            <div className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <div className="py-16 bg-gradient-to-r from-credibee-primary-600 to-credibee-accent-600 text-white">
                 <div className="container mx-auto max-w-4xl px-4 text-center">
                     <h2 className="text-3xl font-bold mb-4">Ready to Work Together?</h2>
-                    <p className="text-xl mb-8 text-blue-100">
+                    <p className="text-xl mb-8 text-credibee-primary-100">
                         Let's discuss how we can help achieve your business goals
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a 
                             href={`mailto:${user.email}`}
-                            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                            className="bg-white text-credibee-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-credibee-primary-50 transition-colors"
                         >
                             📧 Get in Touch
                         </a>

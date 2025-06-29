@@ -115,6 +115,7 @@ export interface ClientFeedback {
   isPublic: boolean;
   isVerified: boolean;
   response?: string; // Your response to the feedback
+  invoiceId?: string; // Add this field for linking feedback to invoices
 }
 
 export interface FinancialGoal {
