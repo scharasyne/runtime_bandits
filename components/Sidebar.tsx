@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from '../utils/localization';
@@ -18,6 +17,9 @@ const StarIcon: React.FC<{className?: string}> = ({className}) => (
 const UserIcon: React.FC<{className?: string}> = ({className}) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 );
+const CreditCardIcon: React.FC<{className?: string}> = ({className}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+);
 const LogOutIcon: React.FC<{className?: string}> = ({className}) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
 );
@@ -28,7 +30,6 @@ const BeeIcon: React.FC<{className?: string}> = ({className}) => (
     </svg>
 );
 
-
 interface SidebarProps {
     sidebarOpen: boolean;
     setSidebarOpen: (open: boolean) => void;
@@ -36,11 +37,12 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     const t = useTranslation();
-    const navLinkClasses = "flex items-center px-4 py-2.5 text-slate-200 hover:bg-credibee-blue-800 rounded-lg transition-colors";
-    const activeNavLinkClasses = "bg-credibee-blue-900";
+    const navLinkClasses = "flex items-center px-3 py-2.5 text-slate-200 hover:bg-credibee-blue-800 rounded-lg transition-colors text-sm font-medium";
+    const activeNavLinkClasses = "bg-credibee-blue-900 text-white";
 
     const navItems = [
         { to: '/', icon: HomeIcon, label: t('dashboard') },
+        { to: '/transactions', icon: CreditCardIcon, label: 'Transactions' },
         { to: '/invoices', icon: FileTextIcon, label: t('invoices') },
         { to: '/receipts', icon: ReceiptIcon, label: t('receipts') },
         { to: '/feedback', icon: StarIcon, label: t('feedback') },
@@ -59,18 +61,18 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
                     <span className="text-2xl font-bold">Credibee</span>
                 </div>
 
-                <nav className="flex-1 space-y-2">
+                <nav className="flex-1 space-y-1">
                     {navItems.map(item => (
                         <NavLink key={item.to} to={item.to} className={({ isActive }) => `${navLinkClasses} ${isActive ? activeNavLinkClasses : ''}`} end>
-                            <item.icon className="h-5 w-5 mr-3" />
-                            <span>{item.label}</span>
+                            <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
+                            <span className="truncate">{item.label}</span>
                         </NavLink>
                     ))}
                 </nav>
 
-                <div className="mt-auto">
+                <div className="mt-auto pt-4 border-t border-credibee-blue-800">
                     <a href="#" className={navLinkClasses}>
-                        <LogOutIcon className="h-5 w-5 mr-3" />
+                        <LogOutIcon className="h-5 w-5 mr-3 flex-shrink-0" />
                         <span>{t('logout')}</span>
                     </a>
                 </div>

@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './components/pages/Dashboard';
+import Transactions from './components/pages/Transactions';
 import Invoices from './components/pages/Invoices';
 import Receipts from './components/pages/Receipts';
 import Feedback from './components/pages/Feedback';
@@ -19,6 +19,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
+          <Route path="transactions" element={<Transactions />} />
           <Route path="invoices" element={<Invoices />} />
           <Route path="invoices/new" element={<InvoiceForm />} />
           <Route path="invoices/edit/:id" element={<InvoiceForm />} />

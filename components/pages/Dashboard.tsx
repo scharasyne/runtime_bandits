@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useCredibee } from '../../hooks/useCredibee';
 import { useTranslation } from '../../utils/localization';
-import { InvoiceStatus, ReceiptCategory, Invoice, Receipt } from '../../types';
+import { InvoiceStatus, ReceiptCategory, Invoice, Receipt, TransactionCategory } from '../../types';
 import Card from '../common/Card';
 import { getFinancialHealthTips } from '../../services/geminiService';
 
@@ -10,11 +10,22 @@ const SparkleIcon: React.FC<{className?: string}> = ({className}) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9.94 14.34 9 12l-1 2-2 1 2 1 1 2 1-2 2-1-2-1Z"/><path d="M14 5.34 13 3l-1 2-2 1 2 1 1 2 1-2 2-1-2-1Z"/><path d="m18 15-1-2-2-1 2-1 1-2 1 2 2 1-2 1Z"/><path d="M22 12h-2"/><path d="M2 12H1"/><path d="M12 2V1"/><path d="m19.07 4.93-1.41 1.41"/><path d="m4.93 19.07-1.41-1.41"/><path d="M12 22v-2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m19.07 19.07 1.41-1.41"/></svg>
 );
 
+const TrendingUpIcon: React.FC<{className?: string}> = ({className}) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+);
+
+const TargetIcon: React.FC<{className?: string}> = ({className}) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+);
+
+const FileTextIcon: React.FC<{className?: string}> = ({className}) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+);
 
 const Dashboard: React.FC = () => {
     const { state } = useCredibee();
     const t = useTranslation();
-    const { user, invoices, receipts } = state;
+    const { user, invoices, receipts, financialGoals, crediScore } = state;
 
     const [tips, setTips] = useState<string[]>([]);
     const [isLoadingTips, setIsLoadingTips] = useState(false);
@@ -24,7 +35,6 @@ const Dashboard: React.FC = () => {
         const generatedTips = await getFinancialHealthTips(invoices);
         setTips(generatedTips);
         setIsLoadingTips(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [invoices]);
 
     const stats = useMemo(() => {
@@ -42,131 +52,330 @@ const Dashboard: React.FC = () => {
                 return sum + subtotal * (1 + inv.taxRate / 100);
             }, 0);
 
-        const clientNames = new Set(invoices.map(inv => inv.clientName));
-        const totalClients = clientNames.size;
+        const totalExpenses = receipts
+            .filter(rec => rec.amount < 0)
+            .reduce((sum, rec) => sum + Math.abs(rec.amount), 0);
 
-        // Basic CrediScore Algorithm
-        const score = Math.min(100, 
-            (invoices.filter(i => i.status === 'Paid').length * 5) + 
-            (receipts.length * 2) + 
-            (totalClients * 3) + 
-            (Math.log10(totalRevenue + 1) * 10)
-        );
+        const uniqueClients = new Set(invoices.map(inv => inv.clientName));
+        const totalClients = uniqueClients.size;
 
-        return { totalRevenue, pending, totalClients, crediScore: Math.round(score) };
+        return { 
+            totalRevenue, 
+            pending, 
+            totalExpenses,
+            totalClients,
+            netIncome: totalRevenue - totalExpenses
+        };
     }, [invoices, receipts]);
     
     const chartData = useMemo(() => {
-        const dataMap: { [key: string]: { name: string; revenue: number; expenses: number } } = {};
+        const dataMap: { [key: string]: { name: string; revenue: number; expenses: number; profit: number } } = {};
         
         invoices.filter(i => i.status === InvoiceStatus.Paid).forEach(inv => {
-            const month = new Date(inv.issueDate).toLocaleString('default', { month: 'short' });
-            if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0};
+            const month = new Date(inv.paidDate || inv.issueDate).toLocaleString('default', { month: 'short' });
+            if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0, profit: 0 };
             const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-            dataMap[month].revenue += subtotal * (1 + inv.taxRate / 100);
+            const revenue = subtotal * (1 + inv.taxRate / 100);
+            dataMap[month].revenue += revenue;
         });
 
-        receipts.filter(r => r.category === ReceiptCategory.BusinessExpense).forEach(rec => {
+        receipts.filter(r => r.amount < 0).forEach(rec => {
             const month = new Date(rec.date).toLocaleString('default', { month: 'short' });
-            if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0};
+            if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0, profit: 0 };
             dataMap[month].expenses += Math.abs(rec.amount);
+        });
+
+        Object.values(dataMap).forEach(data => {
+            data.profit = data.revenue - data.expenses;
         });
 
         return Object.values(dataMap).slice(-6); // Last 6 months
     }, [invoices, receipts]);
 
+    const expensesByCategory = useMemo(() => {
+        const categoryMap: { [key: string]: number } = {};
+        
+        receipts.filter(r => r.amount < 0).forEach(rec => {
+            const category = rec.transactionCategory || rec.category;
+            categoryMap[category] = (categoryMap[category] || 0) + Math.abs(rec.amount);
+        });
+
+        return Object.entries(categoryMap)
+            .map(([name, value]) => ({ name, value }))
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 5);
+    }, [receipts]);
+
+    const COLORS = ['#0f8eff', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
     const getScoreColor = (score: number) => {
-        if (score > 75) return 'text-credibee-green-500';
-        if (score > 50) return 'text-yellow-500';
-        return 'text-red-500';
-    }
+        if (score >= 85) return 'text-green-600';
+        if (score >= 70) return 'text-blue-600';
+        if (score >= 55) return 'text-yellow-600';
+        if (score >= 40) return 'text-orange-600';
+        return 'text-red-600';
+    };
+
+    const getScoreBgColor = (score: number) => {
+        if (score >= 85) return 'bg-green-100';
+        if (score >= 70) return 'bg-blue-100';
+        if (score >= 55) return 'bg-yellow-100';
+        if (score >= 40) return 'bg-orange-100';
+        return 'bg-red-100';
+    };
 
     const recentActivities: (Invoice | Receipt)[] = [...invoices, ...receipts]
       .sort((a, b) => new Date('date' in a ? a.date : a.issueDate).getTime() < new Date('date' in b ? b.date : b.issueDate).getTime() ? 1 : -1)
-      .slice(0, 5);
+      .slice(0, 8);
 
+    const activeGoals = financialGoals.filter(goal => !goal.isCompleted).slice(0, 3);
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-slate-800">{t('hello')}, {user.name}!</h1>
+        <div className="space-y-4 sm:space-y-6">
+            {/* Welcome Header */}
+            <div className="bg-gradient-to-r from-credibee-blue-600 to-credibee-blue-800 rounded-lg p-4 sm:p-6 text-white">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t('hello')}, {user.name}!</h1>
+                <p className="text-credibee-blue-100 text-sm sm:text-base">Welcome to your financial dashboard</p>
+            </div>
             
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card>
-                    <h4 className="text-sm font-medium text-slate-500">{t('crediScore')}</h4>
-                    <p className={`text-4xl font-bold ${getScoreColor(stats.crediScore)}`}>{stats.crediScore} <span className="text-lg font-normal">/ 100</span></p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                <Card className="p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">{t('crediScore')}</h4>
+                            <p className={`text-xl sm:text-2xl lg:text-3xl font-bold ${getScoreColor(crediScore.score)}`}>
+                                {crediScore.score}
+                            </p>
+                            <p className="text-xs text-slate-500">{crediScore.level}</p>
+                        </div>
+                        <div className={`p-2 rounded-full ${getScoreBgColor(crediScore.score)}`}>
+                            <TrendingUpIcon className={`h-4 w-4 sm:h-5 sm:w-5 ${getScoreColor(crediScore.score)}`} />
+                        </div>
+                    </div>
                 </Card>
-                 <Card>
-                    <h4 className="text-sm font-medium text-slate-500">{t('totalRevenue')}</h4>
-                    <p className="text-3xl font-bold text-slate-800">₱{stats.totalRevenue.toLocaleString()}</p>
+                
+                <Card className="p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">{t('totalRevenue')}</h4>
+                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.totalRevenue.toLocaleString()}</p>
+                            <p className="text-xs text-green-600">+{((stats.totalRevenue / (stats.totalRevenue + stats.totalExpenses)) * 100).toFixed(1)}%</p>
+                        </div>
+                        <div className="p-2 rounded-full bg-green-100">
+                            <TrendingUpIcon className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+                        </div>
+                    </div>
                 </Card>
-                 <Card>
-                    <h4 className="text-sm font-medium text-slate-500">{t('pending')}</h4>
-                    <p className="text-3xl font-bold text-slate-800">₱{stats.pending.toLocaleString()}</p>
+                
+                <Card className="p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">Net Income</h4>
+                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.netIncome.toLocaleString()}</p>
+                            <p className="text-xs text-slate-500">Revenue - Expenses</p>
+                        </div>
+                        <div className="p-2 rounded-full bg-blue-100">
+                            <TargetIcon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                        </div>
+                    </div>
                 </Card>
-                 <Card>
-                    <h4 className="text-sm font-medium text-slate-500">{t('totalClients')}</h4>
-                    <p className="text-3xl font-bold text-slate-800">{stats.totalClients}</p>
+                
+                <Card className="p-3 sm:p-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">Total Clients</h4>
+                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">{stats.totalClients}</p>
+                            <p className="text-xs text-slate-500">Unique clients</p>
+                        </div>
+                        <div className="p-2 rounded-full bg-purple-100">
+                            <FileTextIcon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+                        </div>
+                    </div>
                 </Card>
             </div>
 
             {/* Main content grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                    <Card title={t('revenueAndExpenses')}>
-                        <div style={{ width: '100%', height: 300 }}>
-                            <ResponsiveContainer>
-                                <BarChart data={chartData}>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
+                {/* Left Column - Charts */}
+                <div className="xl:col-span-2 space-y-4 sm:space-y-6">
+                    {/* Revenue Chart */}
+                    <Card title="Financial Performance" className="p-4 sm:p-6">
+                        <div className="h-64 sm:h-80">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={chartData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
+                                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                                    <YAxis tick={{ fontSize: 12 }} />
                                     <Tooltip />
                                     <Legend />
-                                    <Bar dataKey="revenue" fill="#0f8eff" name="Revenue" />
-                                    <Bar dataKey="expenses" fill="#f43f5e" name="Expenses" />
-                                </BarChart>
+                                    <Line dataKey="revenue" stroke="#0f8eff" name="Revenue" strokeWidth={3} />
+                                    <Line dataKey="expenses" stroke="#f43f5e" name="Expenses" strokeWidth={3} />
+                                    <Line dataKey="profit" stroke="#10b981" name="Profit" strokeWidth={3} />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </Card>
+
+                    {/* Expense Breakdown */}
+                    <Card title="Top Expense Categories" className="p-4 sm:p-6">
+                        <div className="h-64 sm:h-80">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={expensesByCategory}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {expensesByCategory.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip formatter={(value) => `₱${Number(value).toLocaleString()}`} />
+                                </PieChart>
                             </ResponsiveContainer>
                         </div>
                     </Card>
                 </div>
 
-                <div className="space-y-6">
-                    <Card title={t('aiPoweredTips')} action={
-                        <button onClick={handleGetTips} disabled={isLoadingTips} className="p-1.5 rounded-full bg-credibee-blue-100 text-credibee-blue-700 hover:bg-credibee-blue-200 disabled:opacity-50">
-                            <SparkleIcon className="h-5 w-5"/>
+                {/* Right Column - Widgets */}
+                <div className="space-y-4 sm:space-y-6">
+                    {/* CrediScore Breakdown */}
+                    <Card title="CrediScore Breakdown" className="p-4 sm:p-6">
+                        <div className="space-y-4">
+                            <div className="text-center">
+                                <div className={`inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full ${getScoreBgColor(crediScore.score)} mb-2`}>
+                                    <span className={`text-2xl sm:text-3xl font-bold ${getScoreColor(crediScore.score)}`}>
+                                        {crediScore.score}
+                                    </span>
+                                </div>
+                                <p className="text-sm font-medium text-slate-600">{crediScore.level}</p>
+                            </div>
+                            
+                            <div className="space-y-3">
+                                {Object.entries(crediScore.factors).map(([key, value]) => (
+                                    <div key={key} className="space-y-1">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                            <span className="font-medium">{value}/25</span>
+                                        </div>
+                                        <div className="w-full bg-slate-200 rounded-full h-2">
+                                            <div 
+                                                className="bg-credibee-blue-600 h-2 rounded-full transition-all duration-300"
+                                                style={{ width: `${(value / 25) * 100}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Financial Goals */}
+                    <Card title="Financial Goals" className="p-4 sm:p-6">
+                        <div className="space-y-4">
+                            {activeGoals.map(goal => (
+                                <div key={goal.id} className="space-y-2">
+                                    <div className="flex justify-between items-start">
+                                        <h4 className="text-sm font-medium text-slate-700">{goal.title}</h4>
+                                        <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                                            {goal.category}
+                                        </span>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <div className="flex justify-between text-sm">
+                                            <span>₱{goal.currentAmount.toLocaleString()}</span>
+                                            <span>₱{goal.targetAmount.toLocaleString()}</span>
+                                        </div>
+                                        <div className="w-full bg-slate-200 rounded-full h-2">
+                                            <div 
+                                                className="bg-credibee-blue-600 h-2 rounded-full transition-all duration-300"
+                                                style={{ width: `${Math.min((goal.currentAmount / goal.targetAmount) * 100, 100)}%` }}
+                                            />
+                                        </div>
+                                        <p className="text-xs text-slate-500">
+                                            {((goal.currentAmount / goal.targetAmount) * 100).toFixed(1)}% complete
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+
+                    {/* AI Tips */}
+                    <Card title={t('aiPoweredTips')} className="p-4 sm:p-6" action={
+                        <button 
+                            onClick={handleGetTips} 
+                            disabled={isLoadingTips} 
+                            className="p-1.5 rounded-full bg-credibee-blue-100 text-credibee-blue-700 hover:bg-credibee-blue-200 disabled:opacity-50 transition-colors"
+                        >
+                            <SparkleIcon className="h-4 w-4 sm:h-5 sm:w-5"/>
                         </button>
                     }>
                         {isLoadingTips ? (
-                            <p className="text-slate-500">{t('generatingTips')}</p>
+                            <p className="text-slate-500 text-sm">Generating insights...</p>
                         ) : (
-                            <ul className="space-y-3">
+                            <div className="space-y-3">
                                 {tips.length > 0 ? tips.map((tip, index) => (
-                                    <li key={index} className="flex items-start">
-                                        <SparkleIcon className="h-4 w-4 text-yellow-400 mr-2 mt-1 flex-shrink-0" />
+                                    <div key={index} className="flex items-start space-x-2">
+                                        <SparkleIcon className="h-3 w-3 text-yellow-400 mt-1 flex-shrink-0" />
                                         <span className="text-sm text-slate-700">{tip}</span>
-                                    </li>
+                                    </div>
                                 )) : (
-                                  <p className="text-sm text-center text-slate-500 py-4">Click the ✨ button to get personalized financial tips!</p>
+                                    <div className="text-center py-4">
+                                        <p className="text-sm text-slate-500 mb-2">Get personalized financial insights!</p>
+                                        <button 
+                                            onClick={handleGetTips}
+                                            className="text-sm text-credibee-blue-600 hover:text-credibee-blue-800 font-medium"
+                                        >
+                                            Click ✨ to start
+                                        </button>
+                                    </div>
                                 )}
-                            </ul>
+                            </div>
                         )}
                     </Card>
 
-                    <Card title={t('recentActivity')}>
-                        <ul className="space-y-4">
+                    {/* Recent Activity */}
+                    <Card title="Recent Activity" className="p-4 sm:p-6">
+                        <div className="space-y-3">
                             {recentActivities.map(activity => (
-                                'invoiceNumber' in activity ?
-                                <li key={activity.id} className="flex justify-between items-center text-sm">
-                                    <p>Invoice <span className="font-semibold text-credibee-blue-700">#{activity.invoiceNumber}</span></p>
-                                    <p className="font-medium">₱{(activity.items.reduce((sum, i) => sum + i.price * i.quantity, 0) * (1 + activity.taxRate / 100)).toLocaleString()}</p>
-                                </li>
-                                :
-                                <li key={activity.id} className="flex justify-between items-center text-sm">
-                                    <p>Receipt <span className="font-semibold text-credibee-blue-700">#{activity.receiptNumber}</span></p>
-                                    <p className={`font-medium ${activity.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>{activity.amount > 0 ? '+' : ''}₱{activity.amount.toLocaleString()}</p>
-                                </li>
+                                <div key={activity.id} className="flex justify-between items-center text-sm py-2 border-b border-slate-100 last:border-b-0">
+                                    {'invoiceNumber' in activity ? (
+                                        <>
+                                            <div className="flex-1">
+                                                <p className="font-medium text-slate-700">Invoice #{activity.invoiceNumber}</p>
+                                                <p className="text-xs text-slate-500">{activity.clientName}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-medium text-credibee-blue-700">
+                                                    ₱{(activity.items.reduce((sum, i) => sum + i.price * i.quantity, 0) * (1 + activity.taxRate / 100)).toLocaleString()}
+                                                </p>
+                                                <p className="text-xs text-slate-500">{activity.status}</p>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="flex-1">
+                                                <p className="font-medium text-slate-700">Receipt #{activity.receiptNumber}</p>
+                                                <p className="text-xs text-slate-500">{activity.from}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className={`font-medium ${activity.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                    {activity.amount > 0 ? '+' : ''}₱{activity.amount.toLocaleString()}
+                                                </p>
+                                                <p className="text-xs text-slate-500">{activity.transactionCategory}</p>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     </Card>
                 </div>
             </div>
