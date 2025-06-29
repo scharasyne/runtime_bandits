@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
+import { calculateFinancialSummary } from '../../utils/financialCalculations';
 import { InvoiceStatus, TransactionCategory, PaymentMethod } from '../../types';
 import Card from '../common/Card';
 
@@ -43,6 +44,7 @@ const Transactions: React.FC = () => {
 
     // Convert invoices and receipts to unified transaction format
     const transactions: Transaction[] = useMemo(() => {
+        // Include ALL invoices for display, but mark amount as 0 for non-paid ones in income calculation
         const invoiceTransactions: Transaction[] = state.invoices.map(invoice => ({
             id: `inv-${invoice.id}`,
             type: 'invoice' as const,
@@ -113,17 +115,20 @@ const Transactions: React.FC = () => {
         return Array.from(categorySet).sort();
     }, [transactions]);
 
-    // Calculate summary statistics
+    // Calculate summary statistics using standardized financial calculation
     const summary = useMemo(() => {
-        const totalIncome = transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
-        const totalExpenses = Math.abs(transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + t.amount, 0));
-        const netIncome = totalIncome - totalExpenses;
+        const financialSummary = calculateFinancialSummary(state.invoices, state.receipts);
         const transactionCount = filteredTransactions.length;
 
-        return { totalIncome, totalExpenses, netIncome, transactionCount };
-    }, [transactions, filteredTransactions]);
+        return { 
+            totalIncome: financialSummary.totalIncome, 
+            totalExpenses: financialSummary.totalExpenses, 
+            netIncome: financialSummary.netIncome, 
+            transactionCount 
+        };
+    }, [state.invoices, state.receipts, filteredTransactions]);
 
-    const formatCurrency = (amount: number) => `₱${Math.abs(amount).toLocaleString()}`;
+    const formatCurrency = (amount: number) => `₱${Math.abs(amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
     const getStatusColor = (status?: InvoiceStatus) => {
         switch (status) {

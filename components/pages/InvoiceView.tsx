@@ -57,7 +57,7 @@ const InvoiceView: React.FC = () => {
     const taxAmount = subtotal * (invoice.taxRate / 100);
     const total = subtotal + taxAmount;
     
-    const paymentUrl = `https://pay.credibee.ph/dummy-payment?invoiceId=${invoice.invoiceNumber}&amount=${total}`;
+    const paymentUrl = `${window.location.origin}/#/payment/${invoice.invoiceNumber}/${total}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(paymentUrl)}&qzone=1`;
     const publicProfileUrl = `${window.location.origin}/#/public/${user.id}`;
 

@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCredibee } from '../../hooks/useCredibee';
-import { Receipt, ReceiptCategory, PaymentMethod } from '../../types';
+import { calculateFinancialSummary } from '../../utils/financialCalculations';
+import { Receipt, ReceiptCategory, PaymentMethod, InvoiceStatus } from '../../types';
 import Card from '../common/Card';
 import { useTranslation } from '../../utils/localization';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
@@ -25,10 +26,23 @@ const Receipts: React.FC = () => {
             return matchesSearch && matchesCategory && matchesPaymentMethod;
         }).sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-        const totalIncome = state.receipts.filter(r => r.amount > 0).reduce((sum, r) => sum + r.amount, 0);
-        const totalExpenses = state.receipts.filter(r => r.amount < 0).reduce((sum, r) => sum + r.amount, 0);
+        // Use standardized financial calculation including invoices
+        const financialSummary = calculateFinancialSummary(state.invoices, state.receipts);
+        const totalIncome = financialSummary.totalIncome;
+        const totalExpenses = financialSummary.totalExpenses;
 
         const monthlyChart: { [key: string]: { name: string; income: number; expenses: number } } = {};
+        
+        // Include PAID invoices in income (consistent with standardized calculation)
+        state.invoices.filter(inv => inv.status === InvoiceStatus.Paid).forEach(inv => {
+            const month = new Date(inv.paidDate || inv.issueDate).toLocaleString('default', { month: 'short', year: '2-digit' });
+            if (!monthlyChart[month]) monthlyChart[month] = { name: month, income: 0, expenses: 0 };
+            const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
+            const revenue = subtotal * (1 + inv.taxRate / 100);
+            monthlyChart[month].income += revenue;
+        });
+        
+        // Include receipt transactions
         state.receipts.forEach(rec => {
             const month = new Date(rec.date).toLocaleString('default', { month: 'short', year: '2-digit' });
             if (!monthlyChart[month]) monthlyChart[month] = { name: month, income: 0, expenses: 0 };
@@ -45,7 +59,7 @@ const Receipts: React.FC = () => {
             summary: {
                 totalIncome,
                 totalExpenses,
-                netIncome: totalIncome + totalExpenses
+                netIncome: financialSummary.netIncome
             },
             filteredReceipts: filtered,
             chartData: Object.values(monthlyChart).slice(-12),

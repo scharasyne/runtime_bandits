@@ -13,6 +13,7 @@ import ClientFeedback from './components/pages/ClientFeedback';
 import InvoiceForm from './components/pages/InvoiceForm';
 import ReceiptView from './components/pages/ReceiptView';
 import ReceiptForm from './components/pages/ReceiptForm';
+import Payment from './components/pages/Payment';
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         </Route>
         <Route path="public/:userId" element={<PublicProfile />} />
         <Route path="feedback/:invoiceId" element={<ClientFeedback />} />
+        <Route path="payment/:invoiceId/:amount" element={<Payment />} />
       </Routes>
     </HashRouter>
   );

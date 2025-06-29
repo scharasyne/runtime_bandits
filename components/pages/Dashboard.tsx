@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useCredibee } from '../../hooks/useCredibee';
 import { useTranslation } from '../../utils/localization';
+import { calculateFinancialSummary } from '../../utils/financialCalculations';
 import { InvoiceStatus, ReceiptCategory, Invoice, Receipt, TransactionCategory } from '../../types';
 import Card from '../common/Card';
 import { getFinancialHealthTips } from '../../services/geminiService';
@@ -38,58 +39,63 @@ const Dashboard: React.FC = () => {
     }, [invoices]);
 
     const stats = useMemo(() => {
-        const totalRevenue = invoices
-            .filter(inv => inv.status === InvoiceStatus.Paid)
-            .reduce((sum, inv) => {
-                const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-                return sum + subtotal * (1 + inv.taxRate / 100);
-            }, 0);
-        
-        const pending = invoices
-            .filter(inv => inv.status === InvoiceStatus.Sent || inv.status === InvoiceStatus.Overdue)
-            .reduce((sum, inv) => {
-                const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-                return sum + subtotal * (1 + inv.taxRate / 100);
-            }, 0);
-
-        const totalExpenses = receipts
-            .filter(rec => rec.amount < 0)
-            .reduce((sum, rec) => sum + Math.abs(rec.amount), 0);
-
+        const financialSummary = calculateFinancialSummary(invoices, receipts);
         const uniqueClients = new Set(invoices.map(inv => inv.clientName));
-        const totalClients = uniqueClients.size;
-
+        
         return { 
-            totalRevenue, 
-            pending, 
-            totalExpenses,
-            totalClients,
-            netIncome: totalRevenue - totalExpenses
+            totalRevenue: financialSummary.totalIncome,
+            totalIncome: financialSummary.totalIncome,
+            pending: financialSummary.pendingAmount,
+            totalExpenses: financialSummary.totalExpenses,
+            netIncome: financialSummary.netIncome,
+            totalClients: uniqueClients.size
         };
     }, [invoices, receipts]);
     
     const chartData = useMemo(() => {
-        const dataMap: { [key: string]: { name: string; revenue: number; expenses: number; profit: number } } = {};
+        const dataMap: { [key: string]: { name: string; revenue: number; expenses: number; profit: number; date: Date } } = {};
         
+        // Only PAID invoices for revenue (consistent with financial summary)
         invoices.filter(i => i.status === InvoiceStatus.Paid).forEach(inv => {
-            const month = new Date(inv.paidDate || inv.issueDate).toLocaleString('default', { month: 'short' });
-            if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0, profit: 0 };
+            const date = new Date(inv.paidDate || inv.issueDate);
+            const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format for sorting
+            const monthName = date.toLocaleString('default', { month: 'short' });
+            if (!dataMap[monthKey]) dataMap[monthKey] = { name: monthName, revenue: 0, expenses: 0, profit: 0, date };
             const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
             const revenue = subtotal * (1 + inv.taxRate / 100);
-            dataMap[month].revenue += revenue;
+            dataMap[monthKey].revenue += revenue;
         });
 
+        // Include positive receipts as revenue (consistent with financial summary)
+        receipts.filter(r => r.amount > 0).forEach(rec => {
+            const date = new Date(rec.date);
+            const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format for sorting
+            const monthName = date.toLocaleString('default', { month: 'short' });
+            if (!dataMap[monthKey]) dataMap[monthKey] = { name: monthName, revenue: 0, expenses: 0, profit: 0, date };
+            dataMap[monthKey].revenue += rec.amount;
+        });
+
+        // Only negative receipts for expenses
         receipts.filter(r => r.amount < 0).forEach(rec => {
-            const month = new Date(rec.date).toLocaleString('default', { month: 'short' });
-            if (!dataMap[month]) dataMap[month] = { name: month, revenue: 0, expenses: 0, profit: 0 };
-            dataMap[month].expenses += Math.abs(rec.amount);
+            const date = new Date(rec.date);
+            const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format for sorting
+            const monthName = date.toLocaleString('default', { month: 'short' });
+            if (!dataMap[monthKey]) dataMap[monthKey] = { name: monthName, revenue: 0, expenses: 0, profit: 0, date };
+            dataMap[monthKey].expenses += Math.abs(rec.amount);
         });
 
+        // Calculate profit and round to 2 decimal places
         Object.values(dataMap).forEach(data => {
-            data.profit = data.revenue - data.expenses;
+            data.revenue = Math.round(data.revenue * 100) / 100;
+            data.expenses = Math.round(data.expenses * 100) / 100;
+            data.profit = Math.round((data.revenue - data.expenses) * 100) / 100;
         });
 
-        return Object.values(dataMap).slice(-6); // Last 6 months
+        // Sort by date and take last 6 months to ensure current month is on the right
+        return Object.values(dataMap)
+            .sort((a, b) => a.date.getTime() - b.date.getTime())
+            .slice(-6)
+            .map(({ date, ...rest }) => rest); // Remove date from final output
     }, [invoices, receipts]);
 
     const expensesByCategory = useMemo(() => {
@@ -159,7 +165,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h4 className="text-xs sm:text-sm font-medium text-slate-500">{t('totalRevenue')}</h4>
-                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.totalRevenue.toLocaleString()}</p>
+                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                             <p className="text-xs text-green-600">+{((stats.totalRevenue / (stats.totalRevenue + stats.totalExpenses)) * 100).toFixed(1)}%</p>
                         </div>
                         <div className="p-2 rounded-full bg-green-100">
@@ -172,7 +178,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h4 className="text-xs sm:text-sm font-medium text-slate-500">Net Income</h4>
-                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.netIncome.toLocaleString()}</p>
+                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.netIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
                             <p className="text-xs text-slate-500">Revenue - Expenses</p>
                         </div>
                         <div className="p-2 rounded-full bg-blue-100">
@@ -227,7 +233,7 @@ const Dashboard: React.FC = () => {
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                                         outerRadius={80}
                                         fill="#8884d8"
                                         dataKey="value"
