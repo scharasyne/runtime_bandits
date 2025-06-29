@@ -143,57 +143,57 @@ const Dashboard: React.FC = () => {
             </div>
             
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-                <Card className="p-3 sm:p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                <Card className="p-4 sm:p-5">
                     <div className="flex items-center justify-between">
-                        <div>
-                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">CrediScore</h4>
-                            <p className={`text-xl sm:text-2xl lg:text-3xl font-bold ${getScoreColor(crediScore.score)}`}>
+                        <div className="min-w-0 flex-1 pr-3">
+                            <h4 className="text-sm font-medium text-slate-500">CrediScore</h4>
+                            <p className={`text-2xl sm:text-3xl font-bold mt-1 ${getScoreColor(crediScore.score)}`}>
                                 {crediScore.score}
                             </p>
-                            <p className="text-xs text-slate-500">{crediScore.level}</p>
+                            <p className="text-xs text-slate-500 mt-1">{crediScore.level}</p>
                         </div>
-                        <div className={`p-2 rounded-full ${getScoreBgColor(crediScore.score)}`}>
-                            <TrendingUpIcon className={`h-4 w-4 sm:h-5 sm:w-5 ${getScoreColor(crediScore.score)}`} />
-                        </div>
-                    </div>
-                </Card>
-                
-                <Card className="p-3 sm:p-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">Total Revenue</h4>
-                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-                            <p className="text-xs text-green-600">+{((stats.totalRevenue / (stats.totalRevenue + stats.totalExpenses)) * 100).toFixed(1)}%</p>
-                        </div>
-                        <div className="p-2 rounded-full bg-green-100">
-                            <TrendingUpIcon className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+                        <div className={`flex-shrink-0 p-3 rounded-full ${getScoreBgColor(crediScore.score)}`}>
+                            <TrendingUpIcon className={`h-5 w-5 ${getScoreColor(crediScore.score)}`} />
                         </div>
                     </div>
                 </Card>
                 
-                <Card className="p-3 sm:p-4">
+                <Card className="p-4 sm:p-5">
                     <div className="flex items-center justify-between">
-                        <div>
-                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">Net Income</h4>
-                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">₱{stats.netIncome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-                            <p className="text-xs text-slate-500">Revenue - Expenses</p>
+                        <div className="min-w-0 flex-1 pr-3">
+                            <h4 className="text-sm font-medium text-slate-500">Revenue</h4>
+                            <p className="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">₱{stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 0})}</p>
+                            <p className="text-xs text-green-600 mt-1">+{((stats.totalRevenue / (stats.totalRevenue + stats.totalExpenses)) * 100).toFixed(1)}%</p>
                         </div>
-                        <div className="p-2 rounded-full bg-blue-100">
-                            <TargetIcon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                        <div className="flex-shrink-0 p-3 rounded-full bg-green-100">
+                            <TrendingUpIcon className="h-5 w-5 text-green-600" />
                         </div>
                     </div>
                 </Card>
                 
-                <Card className="p-3 sm:p-4">
+                <Card className="p-4 sm:p-5">
                     <div className="flex items-center justify-between">
-                        <div>
-                            <h4 className="text-xs sm:text-sm font-medium text-slate-500">Total Clients</h4>
-                            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800">{stats.totalClients}</p>
-                            <p className="text-xs text-slate-500">Unique clients</p>
+                        <div className="min-w-0 flex-1 pr-3">
+                            <h4 className="text-sm font-medium text-slate-500">Net Income</h4>
+                            <p className="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">₱{stats.netIncome.toLocaleString(undefined, {minimumFractionDigits: 0})}</p>
+                            <p className="text-xs text-slate-500 mt-1">After expenses</p>
                         </div>
-                        <div className="p-2 rounded-full bg-purple-100">
-                            <FileTextIcon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+                        <div className="flex-shrink-0 p-3 rounded-full bg-blue-100">
+                            <TargetIcon className="h-5 w-5 text-blue-600" />
+                        </div>
+                    </div>
+                </Card>
+                
+                <Card className="p-4 sm:p-5">
+                    <div className="flex items-center justify-between">
+                        <div className="min-w-0 flex-1 pr-3">
+                            <h4 className="text-sm font-medium text-slate-500">Clients</h4>
+                            <p className="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">{stats.totalClients}</p>
+                            <p className="text-xs text-slate-500 mt-1">Active clients</p>
+                        </div>
+                        <div className="flex-shrink-0 p-3 rounded-full bg-purple-100">
+                            <FileTextIcon className="h-5 w-5 text-purple-600" />
                         </div>
                     </div>
                 </Card>

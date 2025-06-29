@@ -24,9 +24,9 @@ const Profile: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="flex items-center space-x-6">
                     <img src={user.businessLogoUrl || user.avatarUrl} alt="Business Logo or Avatar" className="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow-md" />
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <h2 className="text-2xl font-bold text-slate-800">{user.name}</h2>
-                        <p className="text-slate-500">{user.email}</p>
+                        <p className="text-slate-500 break-words break-all">{user.email}</p>
                     </div>
                 </div>
 
