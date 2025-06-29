@@ -41,7 +41,6 @@ const InvoiceForm: React.FC = () => {
         issueDate: new Date().toISOString().split('T')[0],
         dueDate: '',
         items: [{ id: `item-${Date.now()}`, description: '', quantity: 1, price: 0 }],
-        taxRate: 12,
         status: InvoiceStatus.Draft,
         notes: 'Thank you for your business!'
     });
@@ -86,12 +85,11 @@ const InvoiceForm: React.FC = () => {
         }
     };
     
-    const { subtotal, taxAmount, total } = useMemo(() => {
+    const { subtotal, total } = useMemo(() => {
         const subtotal = invoice.items.reduce((sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.price) || 0), 0);
-        const taxAmount = subtotal * (invoice.taxRate / 100);
-        const total = subtotal + taxAmount;
-        return { subtotal, taxAmount, total };
-    }, [invoice.items, invoice.taxRate]);
+        const total = subtotal;
+        return { subtotal, total };
+    }, [invoice.items]);
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -278,26 +276,7 @@ const InvoiceForm: React.FC = () => {
                                     <span>Subtotal</span>
                                     <span>₱{subtotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                                 </div>
-                                <div className="flex justify-between items-center text-sm sm:text-base">
-                                    <span>Tax Rate</span>
-                                    <div className="flex items-center gap-2">
-                                        <input 
-                                            type="number" 
-                                            value={invoice.taxRate} 
-                                            onChange={e => setInvoice(p => ({...p, taxRate: Number(e.target.value)}))} 
-                                            className="w-16 sm:w-20 input text-right text-sm" 
-                                            min="0" 
-                                            max="100" 
-                                            step="0.1"
-                                        />
-                                        <span>%</span>
-                                    </div>
-                                </div>
-                                <div className="flex justify-between text-sm sm:text-base">
-                                    <span>Tax Amount</span>
-                                    <span>₱{taxAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                                </div>
-                                <div className="flex justify-between font-bold text-lg sm:text-xl border-t border-slate-200 pt-4">
+                                <div className="flex justify-between font-bold text-slate-900 text-lg sm:text-xl border-t-2 border-slate-300 mt-2 pt-2">
                                     <span>Total</span>
                                     <span>₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                                 </div>

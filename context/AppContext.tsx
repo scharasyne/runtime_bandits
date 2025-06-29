@@ -30,7 +30,6 @@ const initialInvoices: Invoice[] = [
             {id: 'item-2', description: 'Prenup Photoshoot', quantity: 1, price: 12000},
             {id: 'item-3', description: 'Digital Gallery & USB', quantity: 1, price: 3000}
         ], 
-        taxRate: 0, 
         status: InvoiceStatus.Paid, 
         notes: 'Congratulations on your special day!',
         paymentTerms: 'Net 15',
@@ -48,7 +47,6 @@ const initialInvoices: Invoice[] = [
             {id: 'item-4', description: 'Resort Photography for Website', quantity: 1, price: 18000},
             {id: 'item-5', description: 'Food & Amenities Photography', quantity: 1, price: 8000}
         ], 
-        taxRate: 12, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-06-18',
@@ -63,7 +61,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-05-20', 
         dueDate: '2024-06-05', 
         items: [{id: 'item-6', description: 'Baby Milestone Photoshoot (1 year)', quantity: 1, price: 8500}], 
-        taxRate: 0, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-05-30',
@@ -80,7 +77,6 @@ const initialInvoices: Invoice[] = [
             {id: 'item-7', description: 'Corporate Event Photography', quantity: 1, price: 15000},
             {id: 'item-8', description: 'Headshot Session for Executives', quantity: 5, price: 2500}
         ], 
-        taxRate: 12, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-05-28',
@@ -95,7 +91,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-04-25', 
         dueDate: '2024-05-10', 
         items: [{id: 'item-9', description: 'Family Portrait Session', quantity: 1, price: 6500}], 
-        taxRate: 0, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-05-05',
@@ -112,7 +107,6 @@ const initialInvoices: Invoice[] = [
             {id: 'item-10', description: 'Product Photography - Flower Arrangements', quantity: 20, price: 350},
             {id: 'item-11', description: 'Lifestyle Photography for Social Media', quantity: 1, price: 4000}
         ], 
-        taxRate: 12, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-04-30',
@@ -127,7 +121,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-03-20', 
         dueDate: '2024-04-05', 
         items: [{id: 'item-12', description: 'Graduation Photography Session', quantity: 1, price: 5500}], 
-        taxRate: 0, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-03-28',
@@ -141,7 +134,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-03-10', 
         dueDate: '2024-03-25', 
         items: [{id: 'item-13', description: 'Maternity Photoshoot Package', quantity: 1, price: 9000}], 
-        taxRate: 0, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-03-22',
@@ -159,7 +151,6 @@ const initialInvoices: Invoice[] = [
             {id: 'item-14', description: 'Coffee Farm Photography for Brochure', quantity: 1, price: 12000},
             {id: 'item-15', description: 'Drone Photography (Aerial Shots)', quantity: 1, price: 8000}
         ], 
-        taxRate: 12, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-02-28',
@@ -173,7 +164,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-02-08', 
         dueDate: '2024-02-23', 
         items: [{id: 'item-16', description: 'Sweet 16 Birthday Photography', quantity: 1, price: 7500}], 
-        taxRate: 0, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-02-20',
@@ -188,7 +178,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-01-25', 
         dueDate: '2024-02-10', 
         items: [{id: 'item-17', description: 'Corporate New Year Party Photography', quantity: 1, price: 13000}], 
-        taxRate: 12, 
         status: InvoiceStatus.Paid,
         paymentTerms: 'Net 15',
         paidDate: '2024-02-08',
@@ -202,7 +191,6 @@ const initialInvoices: Invoice[] = [
         issueDate: '2024-01-15', 
         dueDate: '2024-01-30', 
         items: [{id: 'item-18', description: 'Engagement Photoshoot in Tagaytay', quantity: 1, price: 10000}], 
-        taxRate: 0, 
         status: InvoiceStatus.Overdue,
         paymentTerms: 'Net 15'
     },
@@ -218,7 +206,6 @@ const initialInvoices: Invoice[] = [
             {id: 'item-19', description: 'Fashion Photography - Summer Collection', quantity: 1, price: 22000},
             {id: 'item-20', description: 'Model Lifestyle Shots', quantity: 1, price: 8000}
         ], 
-        taxRate: 12, 
         status: InvoiceStatus.Sent,
         paymentTerms: 'Net 15'
     }
@@ -590,7 +577,7 @@ const calculateCrediScore = (invoices: Invoice[], receipts: Receipt[], feedback:
     const monthlyRevenues = new Map<string, number>();
     paidInvoices.forEach(inv => {
         const month = new Date(inv.paidDate || inv.issueDate).toISOString().slice(0, 7);
-        const revenue = inv.items.reduce((sum, item) => sum + item.price * item.quantity, 0) * (1 + inv.taxRate / 100);
+        const revenue = inv.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
         monthlyRevenues.set(month, (monthlyRevenues.get(month) || 0) + revenue);
     });
     
@@ -605,7 +592,7 @@ const calculateCrediScore = (invoices: Invoice[], receipts: Receipt[], feedback:
 
     // Business Growth Score (0-20 points)
     const totalRevenue = paidInvoices.reduce((sum, inv) => {
-        return sum + inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0) * (1 + inv.taxRate / 100);
+        return sum + inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
     }, 0);
     const businessAge = (new Date().getTime() - new Date(user.joinDate).getTime()) / (1000 * 60 * 60 * 24 * 365);
     const growthScore = Math.min(20, Math.log10(totalRevenue + 1) * 3 + businessAge * 2);

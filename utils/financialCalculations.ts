@@ -7,7 +7,7 @@ export const calculateFinancialSummary = (invoices: Invoice[], receipts: Receipt
         .filter(inv => inv.status === InvoiceStatus.Paid)
         .reduce((sum, inv) => {
             const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-            return sum + subtotal * (1 + inv.taxRate / 100);
+            return sum + subtotal;
         }, 0);
     
     const receiptIncome = receipts
@@ -26,7 +26,7 @@ export const calculateFinancialSummary = (invoices: Invoice[], receipts: Receipt
         .filter(inv => inv.status === InvoiceStatus.Sent || inv.status === InvoiceStatus.Overdue)
         .reduce((sum, inv) => {
             const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-            return sum + subtotal * (1 + inv.taxRate / 100);
+            return sum + subtotal;
         }, 0);
     
     // Net Income

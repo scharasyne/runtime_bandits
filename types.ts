@@ -36,7 +36,6 @@ export interface Invoice {
   issueDate: string;
   dueDate: string;
   items: InvoiceItem[];
-  taxRate: number; // as percentage
   status: InvoiceStatus;
   notes?: string;
   paymentTerms?: string;

@@ -50,7 +50,7 @@ const Transactions: React.FC = () => {
             type: 'invoice' as const,
             date: invoice.paidDate || invoice.issueDate,
             description: `Invoice #${invoice.invoiceNumber} - ${invoice.clientName}`,
-            amount: invoice.items.reduce((sum, item) => sum + item.price * item.quantity, 0) * (1 + invoice.taxRate / 100),
+            amount: invoice.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
             category: 'Service Revenue',
             status: invoice.status,
             paymentMethod: invoice.paymentMethod,

@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { Invoice } from "../types";
 
@@ -15,14 +14,20 @@ export const getFinancialHealthTips = async (invoices: Invoice[]): Promise<strin
     return Promise.resolve([
       "AI feature disabled: API key not configured.",
       "Tip: Ensure your invoices are sent promptly to clients.",
-      "Tip: Keep a clear record of all your business expenses for tax purposes.",
+      "Tip: Keep accurate financial records to track your business growth effectively.",
+      "Tip: Set clear payment terms with clients to improve cash flow.",
+      "Tip: Regularly review your service pricing to ensure profitability.",
+      "Tip: Consider offering package deals to increase average transaction value.",
+      "Tip: Track client payment patterns to identify reliable customers.",
+      "Tip: Keep a clear record of all your business expenses for record-keeping purposes.",
+      "Tip: Regular invoicing helps maintain steady cash flow for your business."
     ]);
   }
 
   const invoiceCount = invoices.length;
   const totalVolume = invoices.reduce((sum, inv) => {
     const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-    return sum + subtotal * (1 + inv.taxRate / 100);
+    return sum + subtotal;
   }, 0);
   const avgValue = invoiceCount > 0 ? totalVolume / invoiceCount : 0;
 
@@ -37,6 +42,10 @@ export const getFinancialHealthTips = async (invoices: Invoice[]): Promise<strin
         temperature: 0.7,
       },
     });
+
+    if (!response.text) {
+      throw new Error("No response text received from Gemini");
+    }
 
     let jsonStr = response.text.trim();
     const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;

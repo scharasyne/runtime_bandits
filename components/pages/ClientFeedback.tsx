@@ -160,9 +160,7 @@ const ClientFeedback: React.FC = () => {
                         <div className="text-right">
                             <p className="text-sm text-slate-600">Amount</p>
                             <p className="font-bold text-slate-800">
-                                ₱{invoice && (
-                                    invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0) * (1 + invoice.taxRate / 100)
-                                ).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                                ₱{invoice && invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0).toLocaleString(undefined, {minimumFractionDigits: 2})}
                             </p>
                         </div>
                     </div>

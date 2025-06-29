@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
             const monthName = date.toLocaleString('default', { month: 'short' });
             if (!dataMap[monthKey]) dataMap[monthKey] = { name: monthName, revenue: 0, expenses: 0, profit: 0, date };
             const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-            const revenue = subtotal * (1 + inv.taxRate / 100);
+            const revenue = subtotal;
             dataMap[monthKey].revenue += revenue;
         });
 
@@ -358,7 +358,7 @@ const Dashboard: React.FC = () => {
                                             </div>
                                             <div className="text-right">
                                                 <p className="font-medium text-credibee-primary-700">
-                                                    ₱{(activity.items.reduce((sum, i) => sum + i.price * i.quantity, 0) * (1 + activity.taxRate / 100)).toLocaleString()}
+                                                    ₱{(activity.items.reduce((sum, i) => sum + i.price * i.quantity, 0)).toLocaleString()}
                                                 </p>
                                                 <p className="text-xs text-slate-500">{activity.status}</p>
                                             </div>

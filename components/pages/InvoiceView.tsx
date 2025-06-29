@@ -52,8 +52,7 @@ const InvoiceView: React.FC = () => {
     }
     
     const subtotal = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
-    const taxAmount = subtotal * (invoice.taxRate / 100);
-    const total = subtotal + taxAmount;
+    const total = subtotal;
     
     const paymentUrl = `${window.location.origin}/#/payment/${invoice.invoiceNumber}/${total}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(paymentUrl)}&qzone=1`;
@@ -205,10 +204,6 @@ const InvoiceView: React.FC = () => {
                             <div className="flex justify-between text-slate-600 py-2 text-sm sm:text-base">
                                 <span>Subtotal</span>
                                 <span>₱{subtotal.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                            </div>
-                             <div className="flex justify-between text-slate-600 py-2 text-sm sm:text-base">
-                                <span>Tax ({invoice.taxRate}%)</span>
-                                <span>₱{taxAmount.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                             </div>
                              <div className="flex justify-between font-bold text-slate-900 text-lg sm:text-xl border-t-2 border-slate-300 mt-2 pt-2">
                                 <span>Total</span>

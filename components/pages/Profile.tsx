@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
@@ -106,6 +105,20 @@ const Profile: React.FC = () => {
                                 placeholder="https://example.com/logo.png"
                                 className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm"
                             />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-slate-700 border-b pb-2">Contact Information</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label htmlFor="phone" className="block text-sm font-medium text-slate-700">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" className="mt-1 w-full input" />
+                        </div>
+                        <div>
+                            <label htmlFor="website" className="block text-sm font-medium text-slate-700">Website</label>
+                            <input type="url" id="website" name="website" className="mt-1 w-full input" />
                         </div>
                     </div>
                 </div>

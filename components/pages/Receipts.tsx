@@ -36,7 +36,7 @@ const Receipts: React.FC = () => {
             const month = new Date(inv.paidDate || inv.issueDate).toLocaleString('default', { month: 'short', year: '2-digit' });
             if (!monthlyChart[month]) monthlyChart[month] = { name: month, income: 0, expenses: 0 };
             const subtotal = inv.items.reduce((itemSum, item) => itemSum + item.price * item.quantity, 0);
-            const revenue = subtotal * (1 + inv.taxRate / 100);
+            const revenue = subtotal;
             monthlyChart[month].income += revenue;
         });
         

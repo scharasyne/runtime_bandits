@@ -66,7 +66,7 @@ const Invoices: React.FC = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                         {filteredInvoices.map((invoice) => {
-                            const total = invoice.items.reduce((sum, item) => sum + item.price * item.quantity, 0) * (1 + invoice.taxRate / 100);
+                            const total = invoice.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
                             return (
                                 <tr key={invoice.id} className="hover:bg-slate-50 align-middle">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 align-middle">{invoice.invoiceNumber}</td>
