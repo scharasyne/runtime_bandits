@@ -56,31 +56,33 @@ const Invoices: React.FC = () => {
                 <table className="min-w-full divide-y divide-slate-200">
                     <thead className="bg-slate-50">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Invoice #</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Client Name</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Due Date</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Total</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Invoice #</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Client Name</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Due Date</th>
+                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Total</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Status</th>
+                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                         {filteredInvoices.map((invoice) => {
                             const total = invoice.items.reduce((sum, item) => sum + item.price * item.quantity, 0) * (1 + invoice.taxRate / 100);
                             return (
-                                <tr key={invoice.id} className="hover:bg-slate-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{invoice.invoiceNumber}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{invoice.clientName}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{new Date(invoice.dueDate).toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(invoice.status)}`}>
+                                <tr key={invoice.id} className="hover:bg-slate-50 align-middle">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 align-middle">{invoice.invoiceNumber}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 align-middle">{invoice.clientName}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 align-middle">{new Date(invoice.dueDate).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 text-right align-middle">₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm align-middle">
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(invoice.status)} whitespace-nowrap`}>
                                             {invoice.status}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
-                                        <button onClick={() => navigate(`/invoices/${invoice.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">View</button>
-                                        <button onClick={() => navigate(`/invoices/edit/${invoice.id}`)} className="text-slate-600 hover:text-slate-900">Edit</button>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-right align-middle">
+                                        <div className="inline-flex gap-2">
+                                            <button onClick={() => navigate(`/invoices/${invoice.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900 whitespace-nowrap">View</button>
+                                            <button onClick={() => navigate(`/invoices/edit/${invoice.id}`)} className="text-slate-600 hover:text-slate-900 whitespace-nowrap">Edit</button>
+                                        </div>
                                     </td>
                                 </tr>
                             );

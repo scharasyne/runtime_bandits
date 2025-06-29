@@ -163,27 +163,27 @@ const Receipts: React.FC = () => {
                     <table className="min-w-full divide-y divide-slate-200">
                         <thead className="bg-slate-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">From/To</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Category</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
-                                <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Date</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">From/To</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Category</th>
+                                <th scope="col" className="px-8 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">Amount</th>
+                                {/* No headers for View/Edit columns */}
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-slate-200">
                             {filteredReceipts.map((receipt) => (
-                                <tr key={receipt.id} className="hover:bg-slate-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{new Date(receipt.date).toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{receipt.from}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{receipt.category}</td>
-                                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-right font-medium ${receipt.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                        {receipt.amount >= 0 ? '+' : ''}₱{receipt.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                                <tr key={receipt.id} className="hover:bg-slate-50 align-middle">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 align-middle">{new Date(receipt.date).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 align-middle">{receipt.from}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 align-middle">{receipt.category}</td>
+                                    <td className={`px-8 py-4 whitespace-nowrap text-sm text-right font-medium align-middle ${receipt.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>{receipt.amount >= 0 ? '+' : ''}₱{receipt.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                                    <td className="py-4 px-8 whitespace-nowrap text-sm font-medium text-right align-middle w-20 pr-2">
+                                        <button onClick={() => navigate(`/receipts/${receipt.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900 whitespace-nowrap">View</button>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-4">
-                                       <button onClick={() => navigate(`/receipts/${receipt.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">View</button>
-                                       {receipt.amount < 0 && (
-                                            <button onClick={() => navigate(`/receipts/edit/${receipt.id}`)} className="text-slate-600 hover:text-slate-900">Edit</button>
-                                       )}
+                                    <td className="py-4 px-8 whitespace-nowrap text-sm font-medium text-right align-middle w-20 pl-2">
+                                        {receipt.amount < 0 && (
+                                            <button onClick={() => navigate(`/receipts/edit/${receipt.id}`)} className="text-slate-600 hover:text-slate-900 whitespace-nowrap">Edit</button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

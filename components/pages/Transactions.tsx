@@ -274,7 +274,8 @@ const Transactions: React.FC = () => {
                         <thead className="bg-slate-50 border-b">
                             <tr>
                                 <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700">Date</th>
-                                <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700">Description</th>
+                                <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700 w-64">Description</th>
+                                <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700 w-48">Tags</th>
                                 <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700">Category</th>
                                 <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700">Amount</th>
                                 <th className="text-left py-3 px-4 sm:px-6 font-medium text-slate-700">Status</th>
@@ -287,55 +288,39 @@ const Transactions: React.FC = () => {
                                     <td className="py-4 px-4 sm:px-6 text-sm text-slate-600">
                                         {new Date(transaction.date).toLocaleDateString()}
                                     </td>
-                                    <td className="py-4 px-4 sm:px-6">
-                                        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-                                            <span className="font-medium text-slate-900">{transaction.description}</span>
-                                            <div className="flex flex-wrap gap-1 mt-1 sm:mt-0">
-                                                {transaction.isRecurring && (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                                                        Recurring
-                                                    </span>
-                                                )}
-                                                {transaction.tags?.slice(0, 2).map(tag => (
-                                                    <span key={tag} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                    <td className="py-4 px-4 sm:px-6 w-64 align-top break-words">
+                                        <span className="font-medium text-slate-900 break-words whitespace-normal block">{transaction.description}</span>
+                                    </td>
+                                    <td className="py-4 px-4 sm:px-6 w-48 align-top">
+                                        <div className="flex flex-wrap gap-1">
+                                            {transaction.isRecurring && (
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">Recurring</span>
+                                            )}
+                                            {transaction.tags?.map(tag => (
+                                                <span key={tag} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600">{tag}</span>
+                                            ))}
                                         </div>
                                     </td>
                                     <td className="py-4 px-4 sm:px-6 text-sm text-slate-600">{transaction.category}</td>
                                     <td className="py-4 px-4 sm:px-6">
-                                        <span className={`font-semibold ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                            {transaction.amount >= 0 ? '+' : ''}{formatCurrency(transaction.amount)}
-                                        </span>
+                                        <span className={`font-semibold ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>{transaction.amount >= 0 ? '+' : ''}{formatCurrency(transaction.amount)}</span>
                                     </td>
                                     <td className="py-4 px-4 sm:px-6">
                                         {transaction.status ? (
-                                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(transaction.status)}`}>
-                                                {transaction.status}
-                                            </span>
+                                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(transaction.status)}`}>{transaction.status}</span>
                                         ) : (
                                             <span className="text-slate-400 text-sm">—</span>
                                         )}
                                     </td>
-                                    <td className="py-4 px-4 sm:px-6 text-sm text-slate-600">
-                                        {transaction.paymentMethod || '—'}
-                                    </td>
+                                    <td className="py-4 px-4 sm:px-6 text-sm text-slate-600">{transaction.paymentMethod || '—'}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    
-                    {filteredTransactions.length === 0 && (
-                        <div className="text-center py-12">
-                            <p className="text-slate-500">No transactions found matching your criteria.</p>
-                        </div>
-                    )}
                 </div>
             </Card>
         </div>
     );
 };
 
-export default Transactions; 
+export default Transactions;
