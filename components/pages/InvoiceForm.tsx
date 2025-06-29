@@ -113,7 +113,7 @@ const InvoiceForm: React.FC = () => {
                  <h1 className="text-3xl font-bold text-slate-800">{isEditing ? t('editInvoice') : t('createInvoice')}</h1>
                  <div>
                      <button type="button" onClick={() => navigate('/invoices')} className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg mr-2">{t('backToInvoices')}</button>
-                     <button type="submit" className="bg-credibee-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-blue-800 transition-colors">
+                     <button type="submit" className="bg-credibee-primary-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-primary-800 transition-colors">
                         {isEditing ? t('updateInvoice') : t('saveInvoice')}
                     </button>
                  </div>
@@ -196,7 +196,7 @@ const InvoiceForm: React.FC = () => {
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" onClick={addItem} className="mt-4 bg-credibee-blue-100 text-credibee-blue-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-blue-200 transition-colors">{t('addItem')}</button>
+                    <button type="button" onClick={addItem} className="mt-4 bg-credibee-primary-100 text-credibee-primary-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-200 transition-colors">{t('addItem')}</button>
                 </Card>
 
                 {/* Notes and Totals */}

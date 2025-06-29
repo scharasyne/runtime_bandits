@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ setSidebarOpen }) => {
             <div className="flex items-center space-x-4">
                 <button
                     onClick={() => dispatch({ type: 'TOGGLE_LANGUAGE' })}
-                    className="text-sm font-medium text-slate-600 hover:text-credibee-blue-700 transition-colors"
+                    className="text-sm font-medium text-slate-600 hover:text-credibee-primary-700 transition-colors"
                 >
                     {state.language === 'en' ? 'Filipino' : 'English'}
                 </button>

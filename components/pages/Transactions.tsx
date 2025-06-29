@@ -213,7 +213,7 @@ const Transactions: React.FC = () => {
                             placeholder="Search transactions..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-blue-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-primary-500 focus:border-transparent"
                         />
                     </div>
 
@@ -221,7 +221,7 @@ const Transactions: React.FC = () => {
                     <select
                         value={filterType}
                         onChange={(e) => setFilterType(e.target.value as 'all' | 'income' | 'expense')}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-primary-500 focus:border-transparent"
                     >
                         <option value="all">All Types</option>
                         <option value="income">Income Only</option>
@@ -232,7 +232,7 @@ const Transactions: React.FC = () => {
                     <select
                         value={filterCategory}
                         onChange={(e) => setFilterCategory(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-primary-500 focus:border-transparent"
                     >
                         <option value="all">All Categories</option>
                         {categories.map(category => (
@@ -244,7 +244,7 @@ const Transactions: React.FC = () => {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as 'date' | 'amount')}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-primary-500 focus:border-transparent"
                     >
                         <option value="date">Sort by Date</option>
                         <option value="amount">Sort by Amount</option>
@@ -254,7 +254,7 @@ const Transactions: React.FC = () => {
                     <select
                         value={sortOrder}
                         onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-credibee-primary-500 focus:border-transparent"
                     >
                         <option value="desc">Newest First</option>
                         <option value="asc">Oldest First</option>

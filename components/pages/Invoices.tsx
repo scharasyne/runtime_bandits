@@ -32,7 +32,7 @@ const Invoices: React.FC = () => {
 
     return (
         <Card title={t('allInvoices')} action={
-            <button onClick={() => navigate('/invoices/new')} className="bg-credibee-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-blue-800 transition-colors">
+            <button onClick={() => navigate('/invoices/new')} className="bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors">
                 {t('createInvoice')}
             </button>
         }>
@@ -42,12 +42,12 @@ const Invoices: React.FC = () => {
                     placeholder={t('searchByClient')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full md:w-1/2 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-blue-500"
+                    className="w-full md:w-1/2 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500"
                 />
                  <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full md:w-1/2 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-blue-500 bg-white"
+                    className="w-full md:w-1/2 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500 bg-white"
                  >
                     <option value="All">{t('allStatuses')}</option>
                     {Object.values(InvoiceStatus).map(status => (
@@ -82,7 +82,7 @@ const Invoices: React.FC = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-4">
-                                        <button onClick={() => navigate(`/invoices/${invoice.id}`)} className="text-credibee-blue-600 hover:text-credibee-blue-900">{t('view')}</button>
+                                        <button onClick={() => navigate(`/invoices/${invoice.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">{t('view')}</button>
                                         <button onClick={() => navigate(`/invoices/edit/${invoice.id}`)} className="text-slate-600 hover:text-slate-900">{t('edit')}</button>
                                     </td>
                                 </tr>

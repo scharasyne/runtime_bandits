@@ -81,7 +81,7 @@ const ReceiptForm: React.FC = () => {
                  <h1 className="text-3xl font-bold text-slate-800">{isEditing ? t('editExpense') : t('createExpense')}</h1>
                  <div>
                      <button type="button" onClick={() => navigate('/receipts')} className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg mr-2">{t('backToReceipts')}</button>
-                     <button type="submit" className="bg-credibee-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-blue-800 transition-colors">
+                     <button type="submit" className="bg-credibee-primary-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-primary-800 transition-colors">
                         {isEditing ? t('updateExpense') : t('saveExpense')}
                     </button>
                  </div>

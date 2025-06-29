@@ -45,7 +45,7 @@ const InvoiceView: React.FC = () => {
                 <div className="text-center">
                     <h2 className="text-xl font-semibold">{t('noInvoicesFound')}</h2>
                     <p className="text-slate-500 mt-2">The invoice you are looking for does not exist.</p>
-                    <button onClick={() => navigate('/invoices')} className="mt-4 bg-credibee-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-blue-800 transition-colors">
+                    <button onClick={() => navigate('/invoices')} className="mt-4 bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors">
                         {t('backToInvoices')}
                     </button>
                 </div>
@@ -65,14 +65,14 @@ const InvoiceView: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto">
              <div className="flex justify-between items-center mb-4 no-print">
-                <button onClick={() => navigate('/invoices')} className="text-credibee-blue-700 font-semibold hover:underline">
+                <button onClick={() => navigate('/invoices')} className="text-credibee-primary-700 font-semibold hover:underline">
                     &larr; {t('backToInvoices')}
                 </button>
                 <div className="flex gap-2">
                     <button onClick={() => navigate(`/invoices/edit/${invoice.id}`)} className="bg-white border border-slate-300 text-slate-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors">{t('edit')}</button>
                     <button onClick={() => window.print()} className="bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-700 transition-colors">{t('printOrSave')}</button>
                     {invoice.status === 'Draft' && <button onClick={() => handleStatusChange(InvoiceStatus.Sent)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">{t('sendEmail')}</button>}
-                    {invoice.status !== 'Paid' && <button onClick={() => handleStatusChange(InvoiceStatus.Paid)} className="bg-credibee-green-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-600 transition-colors">{t('markAsPaid')}</button>}
+                    {invoice.status !== 'Paid' && <button onClick={() => handleStatusChange(InvoiceStatus.Paid)} className="bg-credibee-accent-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-accent-600 transition-colors">{t('markAsPaid')}</button>}
                 </div>
             </div>
              {notification && <div className="mb-4 p-3 text-center bg-green-100 text-green-800 rounded-lg">{notification}</div>}
@@ -150,7 +150,7 @@ const InvoiceView: React.FC = () => {
                     </section>
 
                     {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue) && (
-                        <section className="my-12 p-6 bg-credibee-blue-50 rounded-lg border border-credibee-blue-200 no-print">
+                        <section className="my-12 p-6 bg-credibee-primary-50 rounded-lg border border-credibee-primary-200 no-print">
                             <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('payNow')}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                                 <div className="text-center">
@@ -158,11 +158,11 @@ const InvoiceView: React.FC = () => {
                                     <p className="text-sm text-slate-600 mt-2 font-medium">{t('scanToPay')}</p>
                                 </div>
                                 <div className="space-y-4 text-center md:text-left">
-                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-block w-full md:w-auto bg-credibee-blue-700 text-white px-8 py-3 rounded-lg text-base font-bold hover:bg-credibee-blue-800 transition-transform hover:scale-105">
+                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="inline-block w-full md:w-auto bg-credibee-primary-700 text-white px-8 py-3 rounded-lg text-base font-bold hover:bg-credibee-primary-800 transition-transform hover:scale-105">
                                         {t('payNow')} ₱{total.toLocaleString(undefined, {minimumFractionDigits: 2})}
                                     </a>
                                     <p className="text-xs text-slate-500 mt-4">{t('orPayWithLink')}</p>
-                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-credibee-blue-600 hover:underline break-all">
+                                    <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-credibee-primary-600 hover:underline break-all">
                                         {paymentUrl}
                                     </a>
                                 </div>

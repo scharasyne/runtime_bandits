@@ -41,7 +41,7 @@ const Profile: React.FC = () => {
                                 id="name"
                                 value={user.name}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500 focus:border-credibee-blue-500 sm:text-sm"
+                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm"
                             />
                         </div>
                         <div>
@@ -52,7 +52,7 @@ const Profile: React.FC = () => {
                                 id="email"
                                 value={user.email}
                                 onChange={handleChange}
-                                 className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500 focus:border-credibee-blue-500 sm:text-sm bg-slate-50"
+                                 className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm bg-slate-50"
                                 readOnly
                             />
                         </div>
@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
                                 id="businessName"
                                 value={user.businessName}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500 focus:border-credibee-blue-500 sm:text-sm"
+                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm"
                             />
                         </div>
                         <div>
@@ -81,7 +81,7 @@ const Profile: React.FC = () => {
                                 id="tin"
                                 value={user.tin || ''}
                                 onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500 focus:border-credibee-blue-500 sm:text-sm"
+                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm"
                             />
                         </div>
                         <div className="md:col-span-2">
@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
                                 value={user.businessAddress || ''}
                                 onChange={handleChange}
                                 rows={3}
-                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500 focus:border-credibee-blue-500 sm:text-sm"
+                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm"
                             />
                         </div>
                          <div className="md:col-span-2">
@@ -104,7 +104,7 @@ const Profile: React.FC = () => {
                                 value={user.businessLogoUrl || ''}
                                 onChange={handleChange}
                                 placeholder="https://example.com/logo.png"
-                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500 focus:border-credibee-blue-500 sm:text-sm"
+                                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-primary-500 focus:border-credibee-primary-500 sm:text-sm"
                             />
                         </div>
                     </div>
@@ -112,7 +112,7 @@ const Profile: React.FC = () => {
 
                 <div className="flex justify-end items-center pt-4 border-t">
                     {isSaved && <span className="text-green-600 mr-4">Saved successfully!</span>}
-                    <button type="submit" className="bg-credibee-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-blue-800 transition-colors">
+                    <button type="submit" className="bg-credibee-primary-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-primary-800 transition-colors">
                         Save Changes
                     </button>
                 </div>

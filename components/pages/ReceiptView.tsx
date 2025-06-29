@@ -17,7 +17,7 @@ const ReceiptView: React.FC = () => {
             <div className="bg-white p-8 rounded-lg shadow-md text-center">
                 <h2 className="text-xl font-semibold">{t('noReceiptsFound')}</h2>
                 <p className="text-slate-500 mt-2">The receipt you are looking for does not exist.</p>
-                <button onClick={() => navigate('/receipts')} className="mt-4 bg-credibee-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-blue-800 transition-colors">
+                <button onClick={() => navigate('/receipts')} className="mt-4 bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors">
                     {t('backToReceipts')}
                 </button>
             </div>
@@ -29,7 +29,7 @@ const ReceiptView: React.FC = () => {
     return (
         <div className="max-w-2xl mx-auto">
              <div className="flex justify-between items-center mb-4 no-print">
-                <button onClick={() => navigate('/receipts')} className="text-credibee-blue-700 font-semibold hover:underline">
+                <button onClick={() => navigate('/receipts')} className="text-credibee-primary-700 font-semibold hover:underline">
                     &larr; {t('backToReceipts')}
                 </button>
                 <div className="flex gap-2">

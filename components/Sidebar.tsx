@@ -37,8 +37,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     const t = useTranslation();
-    const navLinkClasses = "flex items-center px-3 py-2.5 text-slate-200 hover:bg-credibee-blue-800 rounded-lg transition-colors text-sm font-medium";
-    const activeNavLinkClasses = "bg-credibee-blue-900 text-white";
+    const navLinkClasses = "flex items-center px-3 py-2.5 text-slate-200 hover:bg-credibee-primary-800 rounded-lg transition-colors text-sm font-medium";
+    const activeNavLinkClasses = "bg-credibee-primary-900 text-white";
 
     const navItems = [
         { to: '/', icon: HomeIcon, label: t('dashboard') },
@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
             <div className={`fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`} onClick={() => setSidebarOpen(false)}></div>
 
             {/* Sidebar */}
-            <div className={`fixed inset-y-0 left-0 w-64 bg-credibee-blue-950 p-4 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 flex flex-col`}>
+            <div className={`fixed inset-y-0 left-0 w-64 bg-credibee-primary-950 p-4 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 flex flex-col`}>
                 <div className="flex items-center space-x-3 text-white px-2 mb-8">
                     <BeeIcon className="h-8 w-8 text-yellow-300"/>
                     <span className="text-2xl font-bold">Credibee</span>
@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
                     ))}
                 </nav>
 
-                <div className="mt-auto pt-4 border-t border-credibee-blue-800">
+                <div className="mt-auto pt-4 border-t border-credibee-primary-800">
                     <a href="#" className={navLinkClasses}>
                         <LogOutIcon className="h-5 w-5 mr-3 flex-shrink-0" />
                         <span>{t('logout')}</span>

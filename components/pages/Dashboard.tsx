@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
             .slice(0, 5);
     }, [receipts]);
 
-    const COLORS = ['#0f8eff', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+    const COLORS = ['#ffbf01', '#ffa400', '#ffe9af', '#ff9500', '#e67e00'];
 
     const getScoreColor = (score: number) => {
         if (score >= 85) return 'text-green-600';
@@ -133,9 +133,9 @@ const Dashboard: React.FC = () => {
     return (
         <div className="space-y-4 sm:space-y-6">
             {/* Welcome Header */}
-            <div className="bg-gradient-to-r from-credibee-blue-600 to-credibee-blue-800 rounded-lg p-4 sm:p-6 text-white">
+            <div className="bg-gradient-to-r from-credibee-primary-600 to-credibee-primary-800 rounded-lg p-4 sm:p-6 text-white">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t('hello')}, {user.name}!</h1>
-                <p className="text-credibee-blue-100 text-sm sm:text-base">Welcome to your financial dashboard</p>
+                <p className="text-credibee-primary-100 text-sm sm:text-base">Welcome to your financial dashboard</p>
             </div>
             
             {/* Stats Grid */}
@@ -209,9 +209,9 @@ const Dashboard: React.FC = () => {
                                     <YAxis tick={{ fontSize: 12 }} />
                                     <Tooltip />
                                     <Legend />
-                                    <Line dataKey="revenue" stroke="#0f8eff" name="Revenue" strokeWidth={3} />
+                                    <Line dataKey="revenue" stroke="#ffbf01" name="Revenue" strokeWidth={3} />
                                     <Line dataKey="expenses" stroke="#f43f5e" name="Expenses" strokeWidth={3} />
-                                    <Line dataKey="profit" stroke="#10b981" name="Profit" strokeWidth={3} />
+                                    <Line dataKey="profit" stroke="#ffa400" name="Profit" strokeWidth={3} />
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
@@ -266,7 +266,7 @@ const Dashboard: React.FC = () => {
                                         </div>
                                         <div className="w-full bg-slate-200 rounded-full h-2">
                                             <div 
-                                                className="bg-credibee-blue-600 h-2 rounded-full transition-all duration-300"
+                                                className="bg-credibee-primary-600 h-2 rounded-full transition-all duration-300"
                                                 style={{ width: `${(value / 25) * 100}%` }}
                                             />
                                         </div>
@@ -294,7 +294,7 @@ const Dashboard: React.FC = () => {
                                         </div>
                                         <div className="w-full bg-slate-200 rounded-full h-2">
                                             <div 
-                                                className="bg-credibee-blue-600 h-2 rounded-full transition-all duration-300"
+                                                className="bg-credibee-primary-600 h-2 rounded-full transition-all duration-300"
                                                 style={{ width: `${Math.min((goal.currentAmount / goal.targetAmount) * 100, 100)}%` }}
                                             />
                                         </div>
@@ -312,7 +312,7 @@ const Dashboard: React.FC = () => {
                         <button 
                             onClick={handleGetTips} 
                             disabled={isLoadingTips} 
-                            className="p-1.5 rounded-full bg-credibee-blue-100 text-credibee-blue-700 hover:bg-credibee-blue-200 disabled:opacity-50 transition-colors"
+                            className="p-1.5 rounded-full bg-credibee-primary-100 text-credibee-primary-700 hover:bg-credibee-primary-200 disabled:opacity-50 transition-colors"
                         >
                             <SparkleIcon className="h-4 w-4 sm:h-5 sm:w-5"/>
                         </button>
@@ -331,7 +331,7 @@ const Dashboard: React.FC = () => {
                                         <p className="text-sm text-slate-500 mb-2">Get personalized financial insights!</p>
                                         <button 
                                             onClick={handleGetTips}
-                                            className="text-sm text-credibee-blue-600 hover:text-credibee-blue-800 font-medium"
+                                            className="text-sm text-credibee-primary-600 hover:text-credibee-primary-800 font-medium"
                                         >
                                             Click ✨ to start
                                         </button>
@@ -353,7 +353,7 @@ const Dashboard: React.FC = () => {
                                                 <p className="text-xs text-slate-500">{activity.clientName}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-medium text-credibee-blue-700">
+                                                <p className="font-medium text-credibee-primary-700">
                                                     ₱{(activity.items.reduce((sum, i) => sum + i.price * i.quantity, 0) * (1 + activity.taxRate / 100)).toLocaleString()}
                                                 </p>
                                                 <p className="text-xs text-slate-500">{activity.status}</p>

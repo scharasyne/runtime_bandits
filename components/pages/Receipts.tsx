@@ -6,7 +6,7 @@ import Card from '../common/Card';
 import { useTranslation } from '../../utils/localization';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 
-const COLORS = ['#0f8eff', '#10b981', '#f97316', '#ef4444', '#8b5cf6'];
+const COLORS = ['#ffbf01', '#ffa400', '#ffe9af', '#ff9500', '#e67e00'];
 
 const Receipts: React.FC = () => {
     const { state } = useCredibee();
@@ -117,7 +117,7 @@ const Receipts: React.FC = () => {
             <Card title={t('allReceipts')} action={
                 <div className="flex items-center gap-2">
                     <button onClick={exportToCSV} className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-100 transition-colors">{t('exportToCsv')}</button>
-                    <button onClick={() => navigate('/receipts/new')} className="bg-credibee-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-blue-800 transition-colors">
+                    <button onClick={() => navigate('/receipts/new')} className="bg-credibee-primary-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-credibee-primary-800 transition-colors">
                         {t('createExpense')}
                     </button>
                 </div>
@@ -128,12 +128,12 @@ const Receipts: React.FC = () => {
                         placeholder={t('searchBySource')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-blue-500"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500"
                     />
                     <select
                         value={categoryFilter}
                         onChange={e => setCategoryFilter(e.target.value)}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-blue-500 bg-white"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500 bg-white"
                     >
                         <option value="All">{t('allCategories')}</option>
                         {Object.values(ReceiptCategory).map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -141,7 +141,7 @@ const Receipts: React.FC = () => {
                      <select
                         value={paymentMethodFilter}
                         onChange={e => setPaymentMethodFilter(e.target.value)}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-blue-500 bg-white"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-credibee-primary-500 bg-white"
                     >
                         <option value="All">{t('allPaymentMethods')}</option>
                         {Object.values(PaymentMethod).map(pm => <option key={pm} value={pm}>{pm}</option>)}
@@ -168,7 +168,7 @@ const Receipts: React.FC = () => {
                                         {receipt.amount >= 0 ? '+' : ''}₱{receipt.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-4">
-                                       <button onClick={() => navigate(`/receipts/${receipt.id}`)} className="text-credibee-blue-600 hover:text-credibee-blue-900">{t('view')}</button>
+                                       <button onClick={() => navigate(`/receipts/${receipt.id}`)} className="text-credibee-primary-600 hover:text-credibee-primary-900">{t('view')}</button>
                                        {receipt.amount < 0 && (
                                             <button onClick={() => navigate(`/receipts/edit/${receipt.id}`)} className="text-slate-600 hover:text-slate-900">{t('edit')}</button>
                                        )}
