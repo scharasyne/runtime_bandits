@@ -42,6 +42,13 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         { to: '/profile', icon: UserIcon, label: 'Profile' },
     ];
 
+    const handleNavItemClick = () => {
+        // Close sidebar on mobile when nav item is clicked
+        if (window.innerWidth < 1024) { // lg breakpoint
+            setSidebarOpen(false);
+        }
+    };
+
     return (
         <>
             {/* Mobile overlay */}
@@ -56,7 +63,13 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
                 <nav className="flex-1 space-y-1">
                     {navItems.map(item => (
-                        <NavLink key={item.to} to={item.to} className={({ isActive }) => `${navLinkClasses} ${isActive ? activeNavLinkClasses : ''}`} end>
+                        <NavLink 
+                            key={item.to} 
+                            to={item.to} 
+                            className={({ isActive }) => `${navLinkClasses} ${isActive ? activeNavLinkClasses : ''}`} 
+                            onClick={handleNavItemClick}
+                            end
+                        >
                             <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
                             <span className="truncate">{item.label}</span>
                         </NavLink>
@@ -64,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
                 </nav>
 
                 <div className="mt-auto pt-4 border-t border-credibee-primary-800">
-                    <a href="#" className={navLinkClasses}>
+                    <a href="#" className={navLinkClasses} onClick={handleNavItemClick}>
                         <LogOutIcon className="h-5 w-5 mr-3 flex-shrink-0" />
                         <span>Logout</span>
                     </a>
