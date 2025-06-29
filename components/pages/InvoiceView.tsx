@@ -171,15 +171,17 @@ const InvoiceView: React.FC = () => {
                     )}
 
                     {(invoice.status === InvoiceStatus.Sent || invoice.status === InvoiceStatus.Overdue || invoice.status === InvoiceStatus.Paid) && (
-                        <section className="my-12 p-6 bg-slate-50 rounded-lg border border-slate-200 text-center no-print">
-                            <h3 className="text-lg font-semibold text-slate-800 mb-4">{t('leaveReviewPrompt')}</h3>
+                        <section className="my-12 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200 text-center no-print">
+                            <div className="text-4xl mb-4">⭐</div>
+                            <h3 className="text-lg font-semibold text-slate-800 mb-2">Share Your Experience</h3>
+                            <p className="text-slate-600 mb-4">Your feedback helps us improve and helps others discover our services</p>
                             <a 
-                                href={publicProfileUrl} 
+                                href={`${window.location.origin}/#/feedback/${invoice.id}`}
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="inline-block bg-credibee-green-500 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-green-600 transition-transform hover:scale-105"
+                                className="inline-block bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-3 rounded-lg text-base font-semibold hover:from-green-600 hover:to-blue-600 transition-all hover:scale-105 shadow-lg"
                             >
-                                {t('leaveReviewAction')}
+                                ✍️ Leave Feedback
                             </a>
                         </section>
                     )}

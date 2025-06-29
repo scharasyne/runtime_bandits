@@ -9,6 +9,7 @@ import Feedback from './components/pages/Feedback';
 import Profile from './components/pages/Profile';
 import PublicProfile from './components/pages/PublicProfile';
 import InvoiceView from './components/pages/InvoiceView';
+import ClientFeedback from './components/pages/ClientFeedback';
 import InvoiceForm from './components/pages/InvoiceForm';
 import ReceiptView from './components/pages/ReceiptView';
 import ReceiptForm from './components/pages/ReceiptForm';
@@ -32,6 +33,7 @@ const App: React.FC = () => {
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="public/:userId" element={<PublicProfile />} />
+        <Route path="feedback/:invoiceId" element={<ClientFeedback />} />
       </Routes>
     </HashRouter>
   );

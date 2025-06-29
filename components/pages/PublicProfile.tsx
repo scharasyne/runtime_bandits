@@ -1,16 +1,14 @@
-
 import React from 'react';
 import { useCredibee } from '../../hooks/useCredibee';
 import Card from '../common/Card';
 import { useTranslation } from '../../utils/localization';
 
-const StarRating: React.FC<{ rating: number, onRate?: (rating: number) => void, interactive?: boolean }> = ({ rating, onRate, interactive }) => (
+const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
     <div className="flex">
         {[...Array(5)].map((_, index) => (
             <svg 
                 key={index} 
-                onClick={() => interactive && onRate && onRate(index + 1)}
-                className={`w-6 h-6 ${index < rating ? 'text-yellow-400' : 'text-slate-300'} ${interactive ? 'cursor-pointer' : ''}`} 
+                className={`w-5 h-5 ${index < rating ? 'text-yellow-400' : 'text-slate-300'}`} 
                 fill="currentColor" 
                 viewBox="0 0 20 20"
             >
@@ -20,89 +18,222 @@ const StarRating: React.FC<{ rating: number, onRate?: (rating: number) => void, 
     </div>
 );
 
-
 const PublicProfile: React.FC = () => {
-    // In a real app, this would fetch data based on `userId` from useParams.
-    // For this MVP, we'll just use the context data as a stand-in.
-    const { state, dispatch } = useCredibee();
+    const { state } = useCredibee();
     const t = useTranslation();
-    const { user, feedback } = state;
+    const { user, feedback, invoices, receipts } = state;
 
-    const [newRating, setNewRating] = React.useState(0);
-    const [newComment, setNewComment] = React.useState('');
-    const [clientName, setClientName] = React.useState('');
-    const [submitted, setSubmitted] = React.useState(false);
+    // Calculate business statistics
+    const totalInvoices = invoices.length;
+    const totalRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+    const averageRating = feedback.length > 0 
+        ? (feedback.reduce((sum, fb) => sum + fb.rating, 0) / feedback.length).toFixed(1)
+        : '0';
+    const totalClients = new Set(invoices.map(inv => inv.clientName)).size;
+    const completedProjects = invoices.filter(inv => inv.status === 'paid').length;
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (newRating > 0 && newComment && clientName) {
-            dispatch({
-                type: 'ADD_FEEDBACK',
-                payload: {
-                    id: `fb-${Date.now()}`,
-                    clientName,
-                    rating: newRating,
-                    comment: newComment,
-                    date: new Date().toISOString()
-                }
-            });
-            setSubmitted(true);
+    const businessHighlights = [
+        {
+            icon: '📊',
+            label: 'Total Projects',
+            value: totalInvoices.toString(),
+            color: 'text-blue-600'
+        },
+        {
+            icon: '💰',
+            label: 'Revenue Generated',
+            value: `$${totalRevenue.toLocaleString()}`,
+            color: 'text-green-600'
+        },
+        {
+            icon: '⭐',
+            label: 'Average Rating',
+            value: averageRating,
+            color: 'text-yellow-600'
+        },
+        {
+            icon: '👥',
+            label: 'Happy Clients',
+            value: totalClients.toString(),
+            color: 'text-purple-600'
+        },
+        {
+            icon: '✅',
+            label: 'Completed Projects',
+            value: completedProjects.toString(),
+            color: 'text-indigo-600'
+        },
+        {
+            icon: '🎯',
+            label: 'CrediScore',
+            value: state.crediScore.toString(),
+            color: 'text-orange-600'
         }
-    };
+    ];
+
+    const services = [
+        {
+            title: 'Professional Services',
+            description: 'High-quality business solutions tailored to your needs',
+            icon: '🏢'
+        },
+        {
+            title: 'Consulting',
+            description: 'Expert advice and strategic guidance for your business',
+            icon: '💡'
+        },
+        {
+            title: 'Project Management',
+            description: 'Efficient project delivery with proven methodologies',
+            icon: '📈'
+        },
+        {
+            title: 'Custom Solutions',
+            description: 'Bespoke services designed specifically for your requirements',
+            icon: '⚡'
+        }
+    ];
     
     return (
-        <div className="bg-slate-50 min-h-screen py-8 sm:py-12">
-            <div className="container mx-auto max-w-2xl px-4">
-                <div className="text-center mb-8">
-                     <img src={user.avatarUrl} alt="User Avatar" className="h-24 w-24 rounded-full object-cover mx-auto mb-4" />
-                     <h1 className="text-3xl font-bold text-slate-800">{user.businessName}</h1>
-                     <p className="text-slate-500">Operated by {user.name}</p>
+        <div className="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+            {/* Hero Section */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+                <div className="container mx-auto max-w-4xl px-4 text-center">
+                    <img 
+                        src={user.avatarUrl} 
+                        alt="Business Owner" 
+                        className="h-32 w-32 rounded-full object-cover mx-auto mb-6 ring-4 ring-white/30" 
+                    />
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">{user.businessName}</h1>
+                    <p className="text-xl mb-2 text-blue-100">Led by {user.name}</p>
+                    <p className="text-lg text-blue-100 max-w-2xl mx-auto">
+                        Professional business services with a proven track record of excellence and client satisfaction
+                    </p>
+                    <div className="mt-8 flex justify-center">
+                        <div className="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
+                            <div className="flex items-center gap-3">
+                                <StarRating rating={Math.round(parseFloat(averageRating))} />
+                                <span className="text-lg font-semibold">{averageRating}/5</span>
+                                <span className="text-blue-100">({feedback.length} reviews)</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <Card title={t('leaveFeedback')}>
-                    {submitted ? (
-                        <div className="text-center py-8">
-                            <h3 className="text-xl font-semibold text-green-600">{t('thankYou')}</h3>
-                            <p className="text-slate-600 mt-2">{t('feedbackSubmitted')}</p>
+            </div>
+
+            {/* Business Highlights */}
+            <div className="py-12">
+                <div className="container mx-auto max-w-6xl px-4">
+                    <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">Business Highlights</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        {businessHighlights.map((highlight, index) => (
+                            <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
+                                <div className="text-3xl mb-3">{highlight.icon}</div>
+                                <div className={`text-2xl font-bold ${highlight.color} mb-2`}>
+                                    {highlight.value}
+                                </div>
+                                <div className="text-sm text-slate-600">{highlight.label}</div>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Services Section */}
+            <div className="py-12 bg-white">
+                <div className="container mx-auto max-w-6xl px-4">
+                    <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">Our Services</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {services.map((service, index) => (
+                            <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
+                                <div className="text-4xl mb-4">{service.icon}</div>
+                                <h3 className="text-xl font-semibold text-slate-800 mb-3">{service.title}</h3>
+                                <p className="text-slate-600">{service.description}</p>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Testimonials Section */}
+            <div className="py-12 bg-slate-50">
+                <div className="container mx-auto max-w-4xl px-4">
+                    <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">What Our Clients Say</h2>
+                    {feedback.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {feedback.slice(0, 4).map(fb => (
+                                <Card key={fb.id} className="p-6">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <p className="font-semibold text-slate-800">{fb.clientName}</p>
+                                            <p className="text-sm text-slate-500">{new Date(fb.date).toLocaleDateString()}</p>
+                                        </div>
+                                        <StarRating rating={fb.rating} />
+                                    </div>
+                                    <p className="text-slate-700 italic">"{fb.comment}"</p>
+                                </Card>
+                            ))}
                         </div>
                     ) : (
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">{t('yourName')}</label>
-                                <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} required className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500"/>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">{t('yourRating')}</label>
-                                <StarRating rating={newRating} onRate={setNewRating} interactive={true} />
-                            </div>
-                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">{t('yourReview')}</label>
-                                <textarea value={newComment} onChange={e => setNewComment(e.target.value)} required rows={4} className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-credibee-blue-500"></textarea>
-                            </div>
-                            <button type="submit" className="w-full bg-credibee-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-credibee-blue-800 transition-colors">
-                                {t('submitFeedback')}
-                            </button>
-                        </form>
+                        <Card className="text-center py-12">
+                            <div className="text-4xl mb-4">🌟</div>
+                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Building Trust Through Excellence</h3>
+                            <p className="text-slate-600">We're committed to delivering exceptional results for every client.</p>
+                        </Card>
                     )}
-                </Card>
+                </div>
+            </div>
 
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold text-slate-800 mb-4">{t('whatClientsSay')}</h2>
-                     <div className="space-y-4">
-                        {feedback.length > 0 ? feedback.map(fb => (
-                            <div key={fb.id} className="p-4 border border-slate-200 rounded-lg bg-white">
-                               <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="font-semibold text-slate-800">{fb.clientName}</p>
-                                        <p className="text-xs text-slate-500">{new Date(fb.date).toLocaleDateString()}</p>
-                                    </div>
-                                    <StarRating rating={fb.rating} />
-                               </div>
-                               <p className="text-slate-600 mt-3 italic">"{fb.comment}"</p>
+            {/* Trust Indicators */}
+            <div className="py-12 bg-white">
+                <div className="container mx-auto max-w-4xl px-4 text-center">
+                    <h2 className="text-3xl font-bold text-slate-800 mb-8">Why Choose Us?</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                                <span className="text-2xl">🏆</span>
                             </div>
-                        )) : (
-                            <p className="text-center text-slate-500 py-8">{t('beFirstToReview')}</p>
-                        )}
+                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Proven Excellence</h3>
+                            <p className="text-slate-600">Consistent delivery of high-quality results with a track record of satisfied clients</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <span className="text-2xl">⚡</span>
+                            </div>
+                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Fast Turnaround</h3>
+                            <p className="text-slate-600">Efficient processes and dedicated focus to meet your deadlines</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                                <span className="text-2xl">🤝</span>
+                            </div>
+                            <h3 className="text-xl font-semibold text-slate-800 mb-2">Trusted Partner</h3>
+                            <p className="text-slate-600">Long-term relationships built on trust, transparency, and reliable service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                <div className="container mx-auto max-w-4xl px-4 text-center">
+                    <h2 className="text-3xl font-bold mb-4">Ready to Work Together?</h2>
+                    <p className="text-xl mb-8 text-blue-100">
+                        Let's discuss how we can help achieve your business goals
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a 
+                            href={`mailto:${user.email}`}
+                            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                        >
+                            📧 Get in Touch
+                        </a>
+                        <a 
+                            href={`tel:${user.phone}`}
+                            className="bg-white/20 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/30 transition-colors"
+                        >
+                            📞 Call Now
+                        </a>
                     </div>
                 </div>
             </div>
